@@ -12,6 +12,7 @@ import (
 const (
 	BTLM_HomeDir      = ".btlmaster"
 	BTLM_CFG_FileName = "btlmaster.json"
+	BTLM_DB_PATH      = "db"
 )
 
 type BtlMasterConf struct {
@@ -25,6 +26,9 @@ type BtlMasterConf struct {
 	ApiPath       string `json:"api_path"`
 	PurchasePath  string `json:"purchase_path"`
 	ListMinerPath string `json:"list_miner_path"`
+
+	MinersDbPath  string `json:"miners_db_path"`
+	LicenseDbPath string `json:"license_db_path"`
 }
 
 var (
@@ -40,6 +44,9 @@ func (bc *BtlMasterConf) InitCfg() *BtlMasterConf {
 	bc.ApiPath = "api"
 	bc.PurchasePath = "purchase"
 	bc.ListMinerPath = "list"
+
+	bc.MinersDbPath = "miners.db"
+	bc.LicenseDbPath = "miners.db"
 
 	return bc
 }
@@ -179,4 +186,21 @@ func IsInitialized() bool {
 	}
 
 	return false
+}
+
+func (bc *BtlMasterConf) mkdirDbPath() string {
+	dbPath := path.Join(GetBtlmCHomeDir(), BTLM_DB_PATH)
+
+	if !tools.FileExists(dbPath) {
+		os.MkdirAll(dbPath, 0755)
+	}
+	return dbPath
+}
+
+func (bc *BtlMasterConf) GetMinersDbFile() string {
+	return path.Join(bc.mkdirDbPath(), bc.MinersDbPath)
+}
+
+func (bc *BtlMasterConf) GetLicensesDbFile() string {
+	return path.Join(bc.mkdirDbPath(), bc.LicenseDbPath)
 }
