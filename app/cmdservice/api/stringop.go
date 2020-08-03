@@ -3,10 +3,8 @@ package api
 import (
 	"context"
 
-
 	"github.com/giantliao/beatles-master/app/cmdcommon"
 	"github.com/giantliao/beatles-master/app/cmdpb"
-
 
 	"time"
 )
@@ -152,6 +150,7 @@ func (cso *CmdStringOPSrv) StringOpDo(cxt context.Context, so *cmdpb.StringOP) (
 
 	return encapResp(msg), nil
 }
+
 //
 //func (cso *CmdStringOPSrv) ListGroupMembers(gid string) string {
 //	cfg := config.GetCCC()

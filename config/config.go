@@ -18,12 +18,12 @@ type BtlMasterConf struct {
 	EthAccessPoint string `json:"eth_access_point"`
 	TrxAccessPoint string `json:"trx_access_point"`
 
-	CmdListenPort string `json:"cmdlistenport"`
-	HttpServerPort int `json:"http_server_port"`
+	CmdListenPort  string `json:"cmdlistenport"`
+	HttpServerPort int    `json:"http_server_port"`
 	WalletSavePath string `json:"wallet_save_path"`
 
-	ApiPath string `json:"api_path"`
-	PurchasePath string `json:"purchase_path"`
+	ApiPath       string `json:"api_path"`
+	PurchasePath  string `json:"purchase_path"`
 	ListMinerPath string `json:"list_miner_path"`
 }
 
@@ -165,14 +165,13 @@ func (bc *BtlMasterConf) Save() {
 
 }
 
-func (bc *BtlMasterConf)GetPurchasePath() string  {
-	return "http://"+bc.ApiPath+"/"+bc.PurchasePath
+func (bc *BtlMasterConf) GetPurchasePath() string {
+	return "http://" + bc.ApiPath + "/" + bc.PurchasePath
 }
 
-func (bc *BtlMasterConf)GetLittMinerPath() string  {
-	return "http://"+bc.ApiPath+"/"+bc.ListMinerPath
+func (bc *BtlMasterConf) GetLittMinerPath() string {
+	return "http://" + bc.ApiPath + "/" + bc.ListMinerPath
 }
-
 
 func IsInitialized() bool {
 	if tools.FileExists(GetBtlmCFGFile()) {
