@@ -65,7 +65,7 @@ func (mdb *MinersDb) Insert(ipv4 string, port int, location string, id account.B
 		minersStore.NbsDbInter.Insert(id.String(), string(j))
 		return nil
 	} else {
-		return err
+		return errors.New("key is existed, row id is " + id.String())
 	}
 }
 
@@ -149,7 +149,6 @@ func (mdb *MinersDb) Next() (id account.BeatleAddress, md *MinerDesc, err error)
 	mdb.dbLock.Unlock()
 
 	md = &MinerDesc{}
-
 	if err := json.Unmarshal([]byte(v), md); err != nil {
 		return "", nil, err
 	}
