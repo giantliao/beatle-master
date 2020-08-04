@@ -16,18 +16,34 @@ limitations under the License.
 package cmd
 
 import (
-	"fmt"
-
+	"github.com/giantliao/beatles-master/app/cmdclient"
+	"github.com/giantliao/beatles-master/app/cmdcommon"
 	"github.com/spf13/cobra"
+	"log"
 )
 
 // loadCmd represents the load command
 var loadCmd = &cobra.Command{
 	Use:   "load",
 	Short: "load wallet",
-	Long: `load wallet`,
+	Long:  `load wallet`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("load called")
+		if _, err := cmdcommon.IsProcessStarted(); err != nil {
+			log.Println(err)
+			return
+		}
+		var err error
+		if keypassword == "" {
+			if keypassword, err = inputpassword(); err != nil {
+				log.Println(err)
+				return
+			}
+		}
+
+		var param []string
+		param = append(param, keypassword)
+
+		cmdclient.StringOpCmdSend("", cmdcommon.CMD_WALLET_LOAD, param)
 	},
 }
 

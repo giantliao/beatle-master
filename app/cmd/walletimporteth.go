@@ -25,9 +25,9 @@ import (
 var ethCmd = &cobra.Command{
 	Use:   "eth",
 	Short: "import wallet eth account",
-	Long: `import wallet eth account`,
+	Long:  `import wallet eth account`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("eth called")
+		fmt.Println("import eth account")
 	},
 }
 
@@ -43,4 +43,5 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// ethCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+
 }

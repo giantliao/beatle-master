@@ -27,7 +27,7 @@ import (
 var createCmd = &cobra.Command{
 	Use:   "create",
 	Short: "create wallet",
-	Long: `create wallet`,
+	Long:  `create wallet`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if _, err := cmdcommon.IsProcessStarted(); err != nil {
 			log.Println(err)
@@ -44,8 +44,7 @@ var createCmd = &cobra.Command{
 		var param []string
 		param = append(param, keypassword)
 
-
-		cmdclient.StringOpCmdSend("", cmdcommon.CMD_WALLET_CREATE,param)
+		cmdclient.StringOpCmdSend("", cmdcommon.CMD_WALLET_CREATE, param)
 	},
 }
 

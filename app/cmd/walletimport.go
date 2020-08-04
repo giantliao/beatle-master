@@ -25,9 +25,9 @@ import (
 var importCmd = &cobra.Command{
 	Use:   "import",
 	Short: "import wallet [trx,eth] account",
-	Long: `import wallet [trx,eth] account`,
+	Long:  `import wallet [trx,eth] account`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("import called")
+		fmt.Println("please choose trx or eth")
 	},
 }
 

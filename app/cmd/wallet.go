@@ -27,7 +27,7 @@ import (
 var walletCmd = &cobra.Command{
 	Use:   "wallet",
 	Short: "show wallet",
-	Long: `show wallet`,
+	Long:  `show wallet`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if _, err := cmdcommon.IsProcessStarted(); err != nil {
 			log.Println(err)
@@ -44,8 +44,7 @@ var walletCmd = &cobra.Command{
 		var param []string
 		param = append(param, keypassword)
 
-
-		cmdclient.StringOpCmdSend("", cmdcommon.CMD_WALLET_SHOW,param)
+		cmdclient.StringOpCmdSend("", cmdcommon.CMD_WALLET_SHOW, param)
 	},
 }
 

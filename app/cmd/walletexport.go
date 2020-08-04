@@ -25,7 +25,7 @@ import (
 var exportCmd = &cobra.Command{
 	Use:   "export",
 	Short: "export wallet",
-	Long: `export wallet`,
+	Long:  `export wallet`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("export called")
 	},

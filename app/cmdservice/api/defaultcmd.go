@@ -63,4 +63,3 @@ func (cds *CmdDefaultServer) configShow() string {
 
 	return string(bapc)
 }
-

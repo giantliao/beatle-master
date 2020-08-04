@@ -21,7 +21,7 @@ func GetWallet() (wallet.WalletIntf, error) {
 func newWallet(auth, savepath, remoteeth string) wallet.WalletIntf {
 	w := wallet.CreateWallet(savepath, remoteeth)
 
-	if w == nil{
+	if w == nil {
 		return nil
 	}
 
@@ -35,7 +35,7 @@ func LoadWallet(auth string) error {
 
 	if !tools.FileExists(cfg.GetWalletSavePath()) {
 		beatlesMasterWallet = newWallet(auth, cfg.GetWalletSavePath(), cfg.EthAccessPoint)
-		if beatlesMasterWallet == nil{
+		if beatlesMasterWallet == nil {
 			return errors.New("create wallet failed ")
 		}
 	} else {

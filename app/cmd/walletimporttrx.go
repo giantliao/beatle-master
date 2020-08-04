@@ -25,7 +25,7 @@ import (
 var trxCmd = &cobra.Command{
 	Use:   "trx",
 	Short: "import wallet trx account",
-	Long: `import wallet trx account`,
+	Long:  `import wallet trx account`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("trx called")
 	},
