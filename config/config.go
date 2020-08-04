@@ -204,3 +204,7 @@ func (bc *BtlMasterConf) GetMinersDbFile() string {
 func (bc *BtlMasterConf) GetLicensesDbFile() string {
 	return path.Join(bc.mkdirDbPath(), bc.LicenseDbPath)
 }
+
+func (bc *BtlMasterConf) GetWalletSavePath() string {
+	return path.Join(GetBtlmCHomeDir(), bc.WalletSavePath)
+}

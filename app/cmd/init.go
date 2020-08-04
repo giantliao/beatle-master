@@ -23,7 +23,10 @@ import (
 	"log"
 )
 
-var remoteethaccesspoint string
+var (
+	remotetrxaccesspoint string
+	remoteethaccesspoint string
+)
 
 var initCmd = &cobra.Command{
 	Use:   "init",
@@ -55,8 +58,8 @@ func init() {
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
 	// initCmd.PersistentFlags().String("foo", "", "A help for foo")
-	//initCmd.Flags().StringVarP(&keypassword, "password", "p", "", "password for key encrypt")
-	initCmd.Flags().StringVarP(&remoteethaccesspoint, "host", "r", "", "eth access point")
+	initCmd.Flags().StringVarP(&remoteethaccesspoint, "eth", "e", "", "eth access point")
+	initCmd.Flags().StringVarP(&remotetrxaccesspoint, "trx", "t", "", "tron network access point")
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// initCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
