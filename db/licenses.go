@@ -53,15 +53,15 @@ func GetLicenseDb() *LicenseDb {
 	return licenseStore
 }
 
-func (ld *LicenseDb) Insert(cid, serverId account.BeatleAddress, sig, name, email, cell string, month int64) error {
+func (ld *LicenseDb) Insert(cid, serverId account.BeatleAddress, sig, name, email, cell string, expireTime int64) error {
 	ld.dbLock.Lock()
 	defer ld.dbLock.Unlock()
 
 	now := tools.GetNowMsTime()
 
 	if _, err := ld.NbsDbInter.Find(cid.String()); err != nil {
-		lDesc := &LicenseDesc{Sig: sig, Name: name, Email: email, Cell: cell, ServerId: serverId}
-		lDesc.ExpireTime = tools.Moth2Expire(0, month)
+		lDesc := &LicenseDesc{Sig: sig, Name: name, Email: email, Cell: cell, ServerId: serverId, ExpireTime: expireTime}
+		//lDesc.ExpireTime = tools.Moth2Expire(0, month)
 		lDesc.CreateTime = now
 		lDesc.UpdateTime = now
 
@@ -74,15 +74,15 @@ func (ld *LicenseDb) Insert(cid, serverId account.BeatleAddress, sig, name, emai
 	}
 }
 
-func (ld *LicenseDb) Update(cid, serverId account.BeatleAddress, sig, name, email, cell string, month int64) error {
+func (ld *LicenseDb) Update(cid, serverId account.BeatleAddress, sig, name, email, cell string, expireTime int64) error {
 	ld.dbLock.Lock()
 	defer ld.dbLock.Unlock()
 
 	now := tools.GetNowMsTime()
 
 	if lDescStr, err := ld.NbsDbInter.Find(cid.String()); err != nil {
-		lDesc := &LicenseDesc{Sig: sig, Name: name, Email: email, Cell: cell, ServerId: serverId}
-		lDesc.ExpireTime = tools.Moth2Expire(0, month)
+		lDesc := &LicenseDesc{Sig: sig, Name: name, Email: email, Cell: cell, ServerId: serverId, ExpireTime: expireTime}
+		//lDesc.ExpireTime = tools.Moth2Expire(0, month)
 		lDesc.CreateTime = now
 		lDesc.UpdateTime = now
 
@@ -103,13 +103,26 @@ func (ld *LicenseDb) Update(cid, serverId account.BeatleAddress, sig, name, emai
 		lDesc.Name = name
 		lDesc.Email = email
 		lDesc.Cell = cell
-		lDesc.ExpireTime = tools.Moth2Expire(lDesc.ExpireTime, month)
+		//lDesc.ExpireTime = tools.Moth2Expire(lDesc.ExpireTime, month)
+		lDesc.ExpireTime = expireTime
 		lDesc.UpdateTime = now
 
 		j, _ := json.Marshal(*lDesc)
 		ld.NbsDbInter.Update(cid.String(), string(j))
 
 		return nil
+	}
+}
+
+func (ld *LicenseDb) Find(cid account.BeatleAddress) *LicenseDesc {
+	ld.dbLock.Lock()
+	defer ld.dbLock.Unlock()
+	if lDescStr, err := ld.NbsDbInter.Find(cid.String()); err != nil {
+		return nil
+	} else {
+		lDesc := &LicenseDesc{}
+		json.Unmarshal([]byte(lDescStr), lDesc)
+		return lDesc
 	}
 }
 

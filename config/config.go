@@ -27,8 +27,12 @@ type BtlMasterConf struct {
 	PurchasePath  string `json:"purchase_path"`
 	ListMinerPath string `json:"list_miner_path"`
 
-	MinersDbPath  string `json:"miners_db_path"`
-	LicenseDbPath string `json:"license_db_path"`
+	MinersDbPath   string `json:"miners_db_path"`
+	LicenseDbPath  string `json:"license_db_path"`
+	ReceiptsDbPath string `json:"receipts_db_path"`
+
+	CurrentPrice float64 `json:"-"`
+	LastPrice    float64 `json:"-"`
 }
 
 var (
@@ -47,6 +51,10 @@ func (bc *BtlMasterConf) InitCfg() *BtlMasterConf {
 
 	bc.MinersDbPath = "miners.db"
 	bc.LicenseDbPath = "miners.db"
+	bc.ReceiptsDbPath = "receipts.db"
+
+	bc.CurrentPrice = 0.01
+	bc.LastPrice = 0.01
 
 	return bc
 }
@@ -203,6 +211,10 @@ func (bc *BtlMasterConf) GetMinersDbFile() string {
 
 func (bc *BtlMasterConf) GetLicensesDbFile() string {
 	return path.Join(bc.mkdirDbPath(), bc.LicenseDbPath)
+}
+
+func (bc *BtlMasterConf) GetReceiptsDbFile() string {
+	return path.Join(bc.mkdirDbPath(), bc.ReceiptsDbPath)
 }
 
 func (bc *BtlMasterConf) GetWalletSavePath() string {
