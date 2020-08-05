@@ -1,6 +1,7 @@
 package cmdservice
 
 import (
+	"github.com/giantliao/beatles-master/webserver"
 	"google.golang.org/grpc"
 	"sync"
 
@@ -75,9 +76,6 @@ func (cs *cmdServer) StartCmdService() {
 
 func (cs *cmdServer) StopCmdService() {
 	config.GetCBtlm().Save()
-	//server.DNSServerStop()
-	//dohserver.GetDohDaemonServer().ShutDown()
-	//mem.MemStateStop()
 
 	cs.grpcServer.Stop()
 	log.Println("Command line server stoped")
@@ -85,7 +83,8 @@ func (cs *cmdServer) StopCmdService() {
 
 func stop() {
 
-	//httpservice.StopWebDaemon()
+	webserver.StopWebDaemon()
+
 	GetCmdServerInst().StopCmdService()
 
 }

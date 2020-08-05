@@ -208,3 +208,11 @@ func (bc *BtlMasterConf) GetLicensesDbFile() string {
 func (bc *BtlMasterConf) GetWalletSavePath() string {
 	return path.Join(GetBtlmCHomeDir(), bc.WalletSavePath)
 }
+
+func (bc *BtlMasterConf) GetpurchaseWebPath() string {
+	return "/" + bc.ApiPath + "/" + bc.PurchasePath
+}
+
+func (bc *BtlMasterConf) GetListMinersWebPath() string {
+	return "/" + bc.ApiPath + "/" + bc.ListMinerPath
+}

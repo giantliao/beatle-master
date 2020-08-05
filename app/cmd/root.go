@@ -18,6 +18,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/giantliao/beatles-master/wallet"
+	"github.com/giantliao/beatles-master/webserver"
 	"github.com/howeyc/gopass"
 	"os"
 
@@ -83,6 +84,8 @@ var rootCmd = &cobra.Command{
 		}
 
 		wallet.LoadWallet(keypassword)
+
+		go webserver.StartWebDaemon()
 
 		cmdservice.GetCmdServerInst().StartCmdService()
 	},

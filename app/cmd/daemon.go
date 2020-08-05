@@ -15,6 +15,7 @@
 package cmd
 
 import (
+	"github.com/giantliao/beatles-master/webserver"
 	"github.com/sevlyar/go-daemon"
 	"github.com/spf13/cobra"
 	"log"
@@ -62,11 +63,9 @@ var daemonCmd = &cobra.Command{
 			return
 		}
 		defer cntxt.Release()
-		//
-		//if config.IsUserIdentifyReceived() {
-		//	config.LoadUserIdentify()
-		//}
-		//msgdrive.RegMsgDriveFunc(chatmeta.FetchGroupKey2)
+
+		go webserver.StartWebDaemon()
+
 		cmdservice.GetCmdServerInst().StartCmdService()
 	},
 }
