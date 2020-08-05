@@ -40,7 +40,7 @@ func (pl *PurchaseLicense) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	req := &meta.Meta{Content: body}
+	req := &meta.Meta{ContentS: string(body)}
 
 	var (
 		sender    string

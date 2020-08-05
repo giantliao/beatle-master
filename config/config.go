@@ -33,6 +33,8 @@ type BtlMasterConf struct {
 
 	CurrentPrice float64 `json:"-"`
 	LastPrice    float64 `json:"-"`
+
+	BootsTrapDownload []string `json:"boots_trap_download"`
 }
 
 var (
