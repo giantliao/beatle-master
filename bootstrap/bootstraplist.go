@@ -3,6 +3,7 @@ package bootstrap
 import (
 	"github.com/giantliao/beatles-master/config"
 	"github.com/giantliao/beatles-master/db"
+	"github.com/giantliao/beatles-master/wallet"
 	"github.com/giantliao/beatles-protocol/meta"
 	"github.com/giantliao/beatles-protocol/miners"
 	"github.com/kprc/nbsnetwork/tools"
@@ -36,11 +37,14 @@ func CollectBootsTrapList(count int) *miners.BootsTrapMiners {
 		}
 	}
 
+	w, _ := wallet.GetWallet()
+
 	cfg := config.GetCBtlm()
 
 	btms.EthAccPoint = cfg.EthAccessPoint
 	btms.TrxAccPoint = cfg.TrxAccessPoint
 	btms.NextDownloadPoint = cfg.BootsTrapDownload
+	btms.BeatlesMasterAddr = w.BtlAddress()
 
 	return btms
 }
