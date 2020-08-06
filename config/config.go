@@ -23,9 +23,10 @@ type BtlMasterConf struct {
 	HttpServerPort int    `json:"http_server_port"`
 	WalletSavePath string `json:"wallet_save_path"`
 
-	ApiPath       string `json:"api_path"`
-	PurchasePath  string `json:"purchase_path"`
-	ListMinerPath string `json:"list_miner_path"`
+	ApiPath           string `json:"api_path"`
+	PurchasePath      string `json:"purchase_path"`
+	ListMinerPath     string `json:"list_miner_path"`
+	RegisterMinerPath string `json:"register_miner_path"`
 
 	MinersDbPath   string `json:"miners_db_path"`
 	LicenseDbPath  string `json:"license_db_path"`
@@ -50,6 +51,7 @@ func (bc *BtlMasterConf) InitCfg() *BtlMasterConf {
 	bc.ApiPath = "api"
 	bc.PurchasePath = "purchase"
 	bc.ListMinerPath = "list"
+	bc.RegisterMinerPath = "reg"
 
 	bc.MinersDbPath = "miners.db"
 	bc.LicenseDbPath = "miners.db"
@@ -229,4 +231,8 @@ func (bc *BtlMasterConf) GetpurchaseWebPath() string {
 
 func (bc *BtlMasterConf) GetListMinersWebPath() string {
 	return "/" + bc.ApiPath + "/" + bc.ListMinerPath
+}
+
+func (bc *BtlMasterConf) GetRegisterMinerWebPath() string {
+	return "/" + bc.ApiPath + "/" + bc.RegisterMinerPath
 }

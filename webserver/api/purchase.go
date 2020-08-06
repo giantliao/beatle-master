@@ -6,18 +6,16 @@ import (
 	"github.com/btcsuite/btcutil/base58"
 	"github.com/giantliao/beatles-master/config"
 	"github.com/giantliao/beatles-master/db"
-	"github.com/giantliao/beatles-master/wallet"
 	"github.com/giantliao/beatles-protocol/licenses"
 	"github.com/kprc/nbsnetwork/tools"
 	"log"
 	"strconv"
 	"strings"
 	"sync"
+	"time"
 
 	"github.com/giantliao/beatles-protocol/meta"
 	"github.com/kprc/libeth/account"
-	w2 "github.com/kprc/libeth/wallet"
-	"io/ioutil"
 	"net/http"
 )
 
@@ -26,41 +24,7 @@ type PurchaseLicense struct {
 }
 
 func (pl *PurchaseLicense) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	if r.Method != "POST" {
-		w.WriteHeader(500)
-		fmt.Fprintf(w, "{}")
-		return
-	}
-	var body []byte
-	var err error
-
-	if body, err = ioutil.ReadAll(r.Body); err != nil {
-		w.WriteHeader(500)
-		fmt.Fprintf(w, "{}")
-		return
-	}
-
-	req := &meta.Meta{ContentS: string(body)}
-
-	var (
-		sender    string
-		cipherTxt []byte
-	)
-	sender, cipherTxt, err = req.UnMarshal()
-	if err != nil || !(account.BeatleAddress(sender).IsValid()) {
-		w.WriteHeader(500)
-		fmt.Fprintf(w, "not a correct request")
-		return
-	}
-	var wal w2.WalletIntf
-	wal, err = wallet.GetWallet()
-	if err != nil {
-		w.WriteHeader(500)
-		fmt.Fprintf(w, "server have no wallet")
-		return
-	}
-	var key []byte
-	key, err = wal.AesKey2(account.BeatleAddress(sender))
+	key, cipherTxt, sender, wal, err := DecodeMeta(r)
 	if err != nil {
 		w.WriteHeader(500)
 		fmt.Fprintf(w, err.Error())
@@ -84,11 +48,12 @@ func (pl *PurchaseLicense) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		total, err = wal.CheckReceipt(lr.EthAddress, lr.EthTransaction)
 		if err != nil && strings.Contains(err.Error(), "pending") {
 			cnt++
-			if cnt > 5 {
+			if cnt > 20 {
 				w.WriteHeader(500)
 				fmt.Fprintf(w, err.Error())
 				return
 			}
+			time.Sleep(time.Second)
 			continue
 		} else if err != nil {
 			w.WriteHeader(500)
@@ -125,12 +90,12 @@ func (pl *PurchaseLicense) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	log.Println("receipt: "+lr.EthTransaction.String(),
 		"price: ", strconv.FormatFloat(lr.CurrentPrice, 'f', -1, 64),
 		"month:", strconv.Itoa(int(lr.Month)),
-		"system price:", strconv.FormatFloat(lr.CurrentPrice, 'f', -1, 64),
+		"total:", strconv.FormatFloat(total, 'f', -1, 64),
+		"system price:", strconv.FormatFloat(price, 'f', -1, 64),
 		"system month:", strconv.Itoa(int(month)))
 
 	//return a new license to client
 	pl.renewLicenseLock.Lock()
-	defer pl.renewLicenseLock.Unlock()
 
 	ld := db.GetLicenseDb().Find(lr.Receiver)
 	expireTime := int64(0)
@@ -160,8 +125,10 @@ func (pl *PurchaseLicense) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		log.Println("receipt :", lr.EthTransaction.String(), " update to db failed")
 		w.WriteHeader(500)
 		fmt.Fprintf(w, err.Error())
+		pl.renewLicenseLock.Unlock()
 		return
 	}
+	pl.renewLicenseLock.Unlock()
 
 	var content []byte
 	content, err = l.Marshal(key)
@@ -175,7 +142,7 @@ func (pl *PurchaseLicense) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	mresp.Marshal(lc.Provider.String(), content)
 
 	w.WriteHeader(200)
-	fmt.Fprint(w, mresp.Content)
+	fmt.Fprint(w, mresp.ContentS)
 
 	return
 

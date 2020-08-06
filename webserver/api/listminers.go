@@ -5,14 +5,12 @@ import (
 	"fmt"
 	"github.com/btcsuite/btcutil/base58"
 	"github.com/giantliao/beatles-master/db"
-	"github.com/giantliao/beatles-master/wallet"
 	"github.com/giantliao/beatles-protocol/licenses"
 	"github.com/giantliao/beatles-protocol/meta"
 	"github.com/giantliao/beatles-protocol/miners"
 	"github.com/kprc/libeth/account"
 	w2 "github.com/kprc/libeth/wallet"
 	"github.com/kprc/nbsnetwork/tools"
-	"io/ioutil"
 	"net/http"
 )
 
@@ -70,41 +68,7 @@ func getBestMiners() *miners.BestMiners {
 }
 
 func (lm *ListMiners) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	if r.Method != "POST" {
-		w.WriteHeader(500)
-		fmt.Fprintf(w, "{}")
-		return
-	}
-	var body []byte
-	var err error
-
-	if body, err = ioutil.ReadAll(r.Body); err != nil {
-		w.WriteHeader(500)
-		fmt.Fprintf(w, "{}")
-		return
-	}
-
-	req := &meta.Meta{ContentS: string(body)}
-
-	var (
-		sender    string
-		cipherTxt []byte
-	)
-	sender, cipherTxt, err = req.UnMarshal()
-	if err != nil || !(account.BeatleAddress(sender).IsValid()) {
-		w.WriteHeader(500)
-		fmt.Fprintf(w, "not a correct request")
-		return
-	}
-	var wal w2.WalletIntf
-	wal, err = wallet.GetWallet()
-	if err != nil {
-		w.WriteHeader(500)
-		fmt.Fprintf(w, "server have no wallet")
-		return
-	}
-	var key []byte
-	key, err = wal.AesKey2(account.BeatleAddress(sender))
+	key, cipherTxt, sender, wal, err := DecodeMeta(r)
 	if err != nil {
 		w.WriteHeader(500)
 		fmt.Fprintf(w, err.Error())
@@ -138,7 +102,7 @@ func (lm *ListMiners) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	resp.Marshal(wal.BtlAddress().String(), cipherTxt)
 
 	w.WriteHeader(200)
-	fmt.Fprint(w, resp.Content)
+	fmt.Fprint(w, resp.ContentS)
 
 	return
 

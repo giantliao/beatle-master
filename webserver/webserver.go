@@ -19,6 +19,7 @@ func StartWebDaemon() {
 	cfg := config.GetCBtlm()
 	mux.Handle(cfg.GetpurchaseWebPath(), &api.PurchaseLicense{})
 	mux.Handle(cfg.GetListMinersWebPath(), &api.ListMiners{})
+	mux.Handle(cfg.GetRegisterMinerWebPath(), &api.MinerRegister{})
 
 	addr := ":" + strconv.Itoa(config.GetCBtlm().HttpServerPort)
 
