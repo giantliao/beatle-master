@@ -118,7 +118,7 @@ func (mdb *MinersDb) Find(id account.BeatleAddress) (md *MinerDesc, err error) {
 		md = &MinerDesc{}
 		json.Unmarshal([]byte(minerDescStr), md)
 		md.ID = id
-		return
+		return md, nil
 	}
 }
 

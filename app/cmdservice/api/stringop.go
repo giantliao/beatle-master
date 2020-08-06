@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/giantliao/beatles-master/app/cmdcommon"
 	"github.com/giantliao/beatles-master/app/cmdpb"
+	"github.com/giantliao/beatles-master/bootstrap"
 	"github.com/giantliao/beatles-master/wallet"
 
 	"time"
@@ -21,6 +22,8 @@ func (cso *CmdStringOPSrv) StringOpDo(cxt context.Context, so *cmdpb.StringOP) (
 		msg = cso.loadWallet(so.Param[0])
 	case cmdcommon.CMD_WALLET_CREATE:
 		msg = cso.createWallet(so.Param[0])
+	case cmdcommon.CMD_BOOTSTRAP_LIST:
+		msg = cso.bootstrapList(so.Param[0])
 	default:
 		return encapResp("Command Not Found"), nil
 	}
@@ -68,4 +71,12 @@ func (cso *CmdStringOPSrv) loadWallet(auth string) string {
 	} else {
 		return "load wallet successful, beatles address is : " + w.BtlAddress().String()
 	}
+}
+
+func (cso *CmdStringOPSrv) bootstrapList(filename string) string {
+	if err := bootstrap.Save2File(filename); err != nil {
+		return err.Error()
+	}
+
+	return "save to file: " + filename + " successful"
 }

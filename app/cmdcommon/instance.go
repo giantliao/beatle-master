@@ -11,10 +11,11 @@ const (
 )
 
 const (
-	CMD_WALLET_CREATE      int32 = 2
-	CMD_WALLET_LOAD        int32 = 3
-	CMD_WALLET_SHOW        int32 = 4
-	CMD_ADD_FRIEND         int32 = 5
+	CMD_WALLET_CREATE  int32 = 2
+	CMD_WALLET_LOAD    int32 = 3
+	CMD_WALLET_SHOW    int32 = 4
+	CMD_BOOTSTRAP_LIST int32 = 5
+
 	CMD_DEL_FRIEND         int32 = 6
 	CMD_CREATE_GROUP       int32 = 7
 	CMD_DEL_GROUP          int32 = 8
