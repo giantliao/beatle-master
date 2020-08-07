@@ -46,7 +46,7 @@ var (
 )
 
 func (bc *BtlMasterConf) InitCfg() *BtlMasterConf {
-	bc.HttpServerPort = 50101
+	bc.HttpServerPort = 50510
 	bc.CmdListenPort = "127.0.0.1:50500"
 	bc.WalletSavePath = "wallet.json"
 

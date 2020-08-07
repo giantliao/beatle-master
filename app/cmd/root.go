@@ -138,5 +138,6 @@ func init() {
 	//rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 
 	rootCmd.Flags().StringVarP(&cmdconfigfilename, "config-file-name", "c", "", "configuration file name")
-
+	rootCmd.Flags().StringVarP(&remoteethaccesspoint, "eth", "e", "", "eth access point")
+	rootCmd.Flags().StringVarP(&remotetrxaccesspoint, "trx", "t", "", "tron network access point")
 }
