@@ -23,6 +23,8 @@ func (cds *CmdDefaultServer) DefaultCmdDo(ctx context.Context,
 		msg = cds.stop()
 	case cmdcommon.CMD_CONFIG_SHOW:
 		msg = cds.configShow()
+	case cmdcommon.CMD_BOOTSTRAP_SHOW:
+		msg = cds.bootstrapShow()
 	}
 
 	if msg == "" {
@@ -43,7 +45,7 @@ func (cds *CmdDefaultServer) stop() string {
 		cds.Stop()
 	}()
 
-	return "chat client stopped"
+	return "beatles master stopped"
 }
 
 func encapResp(msg string) *cmdpb.DefaultResp {
@@ -62,4 +64,12 @@ func (cds *CmdDefaultServer) configShow() string {
 	}
 
 	return string(bapc)
+}
+
+func (cds *CmdDefaultServer) bootstrapShow() string {
+	cfg := config.GetCBtlm()
+
+	msg := cfg.BootstrapString()
+
+	return msg
 }

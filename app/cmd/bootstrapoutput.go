@@ -28,7 +28,7 @@ var bootstrapOutputFile string
 var outputCmd = &cobra.Command{
 	Use:   "output",
 	Short: "output bootstrap to a file ",
-	Long:  `output bootstrap to a file`,
+	Long:  `output bootstrap to a file, include bootstrap server, miners...`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if _, err := cmdcommon.IsProcessStarted(); err != nil {
 			log.Println(err)

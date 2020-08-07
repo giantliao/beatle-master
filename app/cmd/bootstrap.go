@@ -16,7 +16,9 @@ limitations under the License.
 package cmd
 
 import (
-	"fmt"
+	"github.com/giantliao/beatles-master/app/cmdclient"
+	"github.com/giantliao/beatles-master/app/cmdcommon"
+	"log"
 
 	"github.com/spf13/cobra"
 )
@@ -27,7 +29,12 @@ var bootstrapCmd = &cobra.Command{
 	Short: "show bootstrap",
 	Long:  `show bootstrap`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("bootstrap called")
+		if _, err := cmdcommon.IsProcessStarted(); err != nil {
+			log.Println(err)
+			return
+		}
+
+		cmdclient.DefaultCmdSend("", cmdcommon.CMD_BOOTSTRAP_SHOW)
 	},
 }
 

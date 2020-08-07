@@ -1,13 +1,13 @@
 package cmdcommon
 
 const (
-	CMD_STOP        int32 = 1
-	CMD_CONFIG_SHOW int32 = 2
-	//CMD_WALLET_SHOW int32 = 3
-	CMD_RUN         int32 = 4
-	CMD_LIST_FRIEND int32 = 5
-	CMD_LIST_GROUP  int32 = 6
-	CMD_REFRESH_ALL int32 = 7
+	CMD_STOP           int32 = 1
+	CMD_CONFIG_SHOW    int32 = 2
+	CMD_BOOTSTRAP_SHOW int32 = 3
+	CMD_RUN            int32 = 4
+	CMD_LIST_FRIEND    int32 = 5
+	CMD_LIST_GROUP     int32 = 6
+	CMD_REFRESH_ALL    int32 = 7
 )
 
 const (
@@ -15,10 +15,9 @@ const (
 	CMD_WALLET_LOAD    int32 = 3
 	CMD_WALLET_SHOW    int32 = 4
 	CMD_BOOTSTRAP_LIST int32 = 5
+	CMD_BOOTSTRAP_ADD  int32 = 6
+	CMD_BOOTSTRAP_DEL  int32 = 7
 
-	CMD_DEL_FRIEND         int32 = 6
-	CMD_CREATE_GROUP       int32 = 7
-	CMD_DEL_GROUP          int32 = 8
 	CMD_JOIN_GROUP         int32 = 9
 	CMD_QUIT_GROUP         int32 = 10
 	CMD_LIST_GROUPMBRS     int32 = 11

@@ -16,51 +16,47 @@ limitations under the License.
 package cmd
 
 import (
+	"github.com/giantliao/beatles-master/app/cmdclient"
 	"github.com/giantliao/beatles-master/app/cmdcommon"
-	"github.com/giantliao/beatles-master/config"
+	"log"
 
 	"github.com/spf13/cobra"
-	"log"
 )
 
-var (
-	remotetrxaccesspoint string
-	remoteethaccesspoint string
-)
-
-var initCmd = &cobra.Command{
-	Use:   "init",
-	Short: "init beatles master",
-	Long:  `init beatles master`,
+// addCmd represents the add command
+var addCmd = &cobra.Command{
+	Use:   "add",
+	Short: "add bootstrap http server file url",
+	Long:  `add bootstrap http server file url`,
 	Run: func(cmd *cobra.Command, args []string) {
-		var err error
-
-		_, err = cmdcommon.IsProcessCanStarted()
-		if err != nil {
+		if _, err := cmdcommon.IsProcessStarted(); err != nil {
 			log.Println(err)
 			return
 		}
 
-		InitCfg()
+		if len(args) < 1 {
+			log.Println("please enter bootstrap server")
+			return
+		}
 
-		cfg := config.GetCBtlm()
+		var param []string
+		param = append(param, args[0])
 
-		cfg.Save()
+		cmdclient.StringOpCmdSend("", cmdcommon.CMD_BOOTSTRAP_ADD, param)
 
 	},
 }
 
 func init() {
-	rootCmd.AddCommand(initCmd)
+	bootstrapCmd.AddCommand(addCmd)
 
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
-	// initCmd.PersistentFlags().String("foo", "", "A help for foo")
-	initCmd.Flags().StringVarP(&remoteethaccesspoint, "eth", "e", "", "eth access point")
-	initCmd.Flags().StringVarP(&remotetrxaccesspoint, "trx", "t", "", "tron network access point")
+	// addCmd.PersistentFlags().String("foo", "", "A help for foo")
+
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
-	// initCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	// addCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

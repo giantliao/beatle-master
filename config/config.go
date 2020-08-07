@@ -2,6 +2,8 @@ package config
 
 import (
 	"encoding/json"
+	"errors"
+	"fmt"
 	"github.com/kprc/nbsnetwork/tools"
 	"log"
 	"os"
@@ -235,4 +237,48 @@ func (bc *BtlMasterConf) GetListMinersWebPath() string {
 
 func (bc *BtlMasterConf) GetRegisterMinerWebPath() string {
 	return "/" + bc.ApiPath + "/" + bc.RegisterMinerPath
+}
+
+func (bc *BtlMasterConf) AddBootstrap(server string) error {
+	for i := 0; i < len(bc.BootsTrapDownload); i++ {
+		if bc.BootsTrapDownload[i] == server {
+			return errors.New("bootstrap duplicated")
+		}
+	}
+
+	bc.BootsTrapDownload = append(bc.BootsTrapDownload, server)
+
+	bc.Save()
+	return nil
+}
+
+func (bc *BtlMasterConf) DelBootstrap(idx int) error {
+	old := bc.BootsTrapDownload
+
+	if idx < 0 || idx >= len(old) {
+		return errors.New("index error")
+	}
+
+	bc.BootsTrapDownload = old[:idx]
+	bc.BootsTrapDownload = append(bc.BootsTrapDownload, old[idx+1:]...)
+
+	bc.Save()
+
+	return nil
+}
+
+func (bc *BtlMasterConf) BootstrapString() string {
+	s := ""
+	for i := 0; i < len(bc.BootsTrapDownload); i++ {
+		if len(s) > 0 {
+			s += "\r\n"
+		}
+		s += fmt.Sprintf("%-8d %s", i, bc.BootsTrapDownload[i])
+	}
+
+	if len(s) == 0 {
+		s = "no bootstrap server"
+	}
+
+	return s
 }

@@ -5,7 +5,9 @@ import (
 	"github.com/giantliao/beatles-master/app/cmdcommon"
 	"github.com/giantliao/beatles-master/app/cmdpb"
 	"github.com/giantliao/beatles-master/bootstrap"
+	"github.com/giantliao/beatles-master/config"
 	"github.com/giantliao/beatles-master/wallet"
+	"strconv"
 
 	"time"
 )
@@ -24,6 +26,10 @@ func (cso *CmdStringOPSrv) StringOpDo(cxt context.Context, so *cmdpb.StringOP) (
 		msg = cso.createWallet(so.Param[0])
 	case cmdcommon.CMD_BOOTSTRAP_LIST:
 		msg = cso.bootstrapList(so.Param[0])
+	case cmdcommon.CMD_BOOTSTRAP_ADD:
+		msg = cso.bootstrapAdd(so.Param[0])
+	case cmdcommon.CMD_BOOTSTRAP_DEL:
+		msg = cso.bootstrapDel(so.Param[0])
 	default:
 		return encapResp("Command Not Found"), nil
 	}
@@ -79,4 +85,32 @@ func (cso *CmdStringOPSrv) bootstrapList(filename string) string {
 	}
 
 	return "save to file: " + filename + " successful"
+}
+
+func (cso *CmdStringOPSrv) bootstrapAdd(server string) string {
+	cfg := config.GetCBtlm()
+
+	err := cfg.AddBootstrap(server)
+
+	if err != nil {
+		return err.Error()
+	}
+
+	return "add bootstrap server: " + server + " successful"
+}
+
+func (cso *CmdStringOPSrv) bootstrapDel(idxstr string) string {
+
+	idx, err := strconv.Atoi(idxstr)
+	if err != nil {
+		return err.Error()
+	}
+
+	cfg := config.GetCBtlm()
+	err = cfg.DelBootstrap(idx)
+	if err != nil {
+		return err.Error()
+	}
+
+	return "delete bootstrap server index: " + idxstr + " successful"
 }
