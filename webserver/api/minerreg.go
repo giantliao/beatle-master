@@ -19,16 +19,16 @@ func (mr *MinerRegister) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	m:=miners.Miner{}
-	err = m.UnMarshal(key,cipherTxt)
+	m := miners.Miner{}
+	err = m.UnMarshal(key, cipherTxt)
 	if err != nil {
 		w.WriteHeader(500)
 		fmt.Fprintf(w, err.Error())
 		return
 	}
 
-	mdb:=db.GetMinersDb()
-	if err = mdb.Insert(m.Ipv4Addr,m.Port,m.Location,m.MinerId); err!=nil{
+	mdb := db.GetMinersDb()
+	if err = mdb.Insert(m.Ipv4Addr, m.Port, m.Location, m.MinerId); err != nil {
 		w.WriteHeader(500)
 		fmt.Fprintf(w, err.Error())
 		return
