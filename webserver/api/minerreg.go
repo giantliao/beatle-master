@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/giantliao/beatles-master/db"
 	"github.com/giantliao/beatles-protocol/miners"
+	"github.com/kprc/nbsnetwork/tools/httputil"
 
 	"net/http"
 )
@@ -25,6 +26,10 @@ func (mr *MinerRegister) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(500)
 		fmt.Fprintf(w, err.Error())
 		return
+	}
+
+	if m.Ipv4Addr == ""{
+		m.Ipv4Addr,_ = httputil.GetRemoteAddr(r.RemoteAddr)
 	}
 
 	mdb := db.GetMinersDb()

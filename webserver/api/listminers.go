@@ -33,14 +33,16 @@ func IsValidLicense(cid account.BeatleAddress, w w2.WalletIntf, l *licenses.Lice
 
 	forsig, _ := json.Marshal(l.Content)
 
-	bsig := w.BtlSign(forsig)
+	return w.BtlVerifySig(forsig,base58.Decode(l.Signature))
 
-	ssig := base58.Encode(bsig)
-
-	if ssig != l.Signature {
-		return false
-	}
-	return true
+	//bsig := w.BtlSign(forsig)
+	//
+	//ssig := base58.Encode(bsig)
+	//
+	//if ssig != l.Signature {
+	//	return false
+	//}
+	//return true
 }
 
 func getBestMiners() *miners.BestMiners {

@@ -83,7 +83,10 @@ var rootCmd = &cobra.Command{
 			}
 		}
 
-		wallet.LoadWallet(keypassword)
+		err = wallet.LoadWallet(keypassword)
+		if err!=nil{
+			panic("load wallet failed")
+		}
 
 		go webserver.StartWebDaemon()
 
