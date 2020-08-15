@@ -25,7 +25,7 @@ import (
 )
 
 // delCmd represents the del command
-var delCmd = &cobra.Command{
+var bootstrapdelCmd = &cobra.Command{
 	Use:   "del",
 	Short: "del a bootstrap",
 	Long:  `del a bootstrap with the item number`,
@@ -53,7 +53,7 @@ var delCmd = &cobra.Command{
 }
 
 func init() {
-	bootstrapCmd.AddCommand(delCmd)
+	bootstrapCmd.AddCommand(bootstrapdelCmd)
 
 	// Here you will define your flags and configuration settings.
 

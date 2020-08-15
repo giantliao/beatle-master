@@ -8,6 +8,8 @@ const (
 	CMD_LIST_FRIEND    int32 = 5
 	CMD_LIST_GROUP     int32 = 6
 	CMD_REFRESH_ALL    int32 = 7
+	CMD_BOOTSTRAP_PUSHALL int32 = 8
+
 )
 
 const (
@@ -17,6 +19,7 @@ const (
 	CMD_BOOTSTRAP_LIST int32 = 5
 	CMD_BOOTSTRAP_ADD  int32 = 6
 	CMD_BOOTSTRAP_DEL  int32 = 7
+	CMD_BOOTSTRAP_PUSH int32 = 8
 
 	CMD_JOIN_GROUP         int32 = 9
 	CMD_QUIT_GROUP         int32 = 10

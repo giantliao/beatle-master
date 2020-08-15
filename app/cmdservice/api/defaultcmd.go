@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"github.com/giantliao/beatles-master/app/cmdcommon"
 	"github.com/giantliao/beatles-master/app/cmdpb"
+	"github.com/giantliao/beatles-master/bootstrap"
 	"github.com/giantliao/beatles-master/config"
 	"time"
 )
@@ -25,6 +26,8 @@ func (cds *CmdDefaultServer) DefaultCmdDo(ctx context.Context,
 		msg = cds.configShow()
 	case cmdcommon.CMD_BOOTSTRAP_SHOW:
 		msg = cds.bootstrapShow()
+	case cmdcommon.CMD_BOOTSTRAP_PUSHALL:
+		msg = cds.bootstrapPushAll()
 	}
 
 	if msg == "" {
@@ -70,6 +73,15 @@ func (cds *CmdDefaultServer) bootstrapShow() string {
 	cfg := config.GetCBtlm()
 
 	msg := cfg.BootstrapString()
+
+	return msg
+}
+
+func (cds *CmdDefaultServer)bootstrapPushAll() string  {
+	msg,err:=bootstrap.Push2Githubs()
+	if err!=nil{
+		return err.Error()
+	}
 
 	return msg
 }

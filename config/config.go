@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/giantliao/beatles-protocol/miners"
 	"github.com/kprc/nbsnetwork/tools"
 	"log"
 	"os"
@@ -16,6 +17,21 @@ const (
 	BTLM_CFG_FileName = "btlmaster.json"
 	BTLM_DB_PATH      = "db"
 )
+
+
+type GithubAccessPoint struct {
+	DownloadPoint *miners.GithubDownLoadPoint
+	Name string
+	Email string
+}
+
+func (gap *GithubAccessPoint)String() string{
+	msg := gap.DownloadPoint.String()
+	msg += "  name: "+ gap.Name
+	msg += "  email: "+ gap.Email
+
+	return msg
+}
 
 type BtlMasterConf struct {
 	EthAccessPoint string `json:"eth_access_point"`
@@ -37,7 +53,7 @@ type BtlMasterConf struct {
 	CurrentPrice float64 `json:"-"`
 	LastPrice    float64 `json:"-"`
 
-	BootsTrapDownload []string `json:"boots_trap_download"`
+	BootsTrapDownload []*GithubAccessPoint `json:"boots_trap_download"`
 }
 
 var (
@@ -239,14 +255,24 @@ func (bc *BtlMasterConf) GetRegisterMinerWebPath() string {
 	return "/" + bc.ApiPath + "/" + bc.RegisterMinerPath
 }
 
-func (bc *BtlMasterConf) AddBootstrap(server string) error {
-	for i := 0; i < len(bc.BootsTrapDownload); i++ {
-		if bc.BootsTrapDownload[i] == server {
-			return errors.New("bootstrap duplicated")
+func (bc *BtlMasterConf) AddBootstrap(owner ,repository , filePath , readToken ,name ,email string) error {
+	gd:=&miners.GithubDownLoadPoint{}
+	gd.Owner = owner
+	gd.ReadToken = readToken
+	gd.Repository = repository
+	gd.Path = filePath
+
+	for i:=0;i<len(bc.BootsTrapDownload);i++{
+		btd:=bc.BootsTrapDownload[i]
+		if btd.DownloadPoint.Path == gd.Path && btd.DownloadPoint.Repository == gd.Repository && btd.DownloadPoint.ReadToken == gd.ReadToken && btd.DownloadPoint.Owner == gd.Owner{
+			if btd.Name == name && btd.Email == email{
+				return errors.New("accept point duplicated")
+			}
+
 		}
 	}
 
-	bc.BootsTrapDownload = append(bc.BootsTrapDownload, server)
+	bc.BootsTrapDownload = append(bc.BootsTrapDownload,gd)
 
 	bc.Save()
 	return nil
@@ -273,7 +299,7 @@ func (bc *BtlMasterConf) BootstrapString() string {
 		if len(s) > 0 {
 			s += "\r\n"
 		}
-		s += fmt.Sprintf("%-8d %s", i, bc.BootsTrapDownload[i])
+		s += fmt.Sprintf("%-8d %s", i, bc.BootsTrapDownload[i].String())
 	}
 
 	if len(s) == 0 {

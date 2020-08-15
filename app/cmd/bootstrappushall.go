@@ -18,50 +18,39 @@ package cmd
 import (
 	"github.com/giantliao/beatles-master/app/cmdclient"
 	"github.com/giantliao/beatles-master/app/cmdcommon"
-	"github.com/spf13/cobra"
 	"log"
+
+	"github.com/spf13/cobra"
 )
 
-var (
-	bootstrapOutputFile string
-	//bootstrapToGithub bool
-)
-
-
-// outputCmd represents the output command
-var bootstrapoutputCmd = &cobra.Command{
-	Use:   "output",
-	Short: "output bootstrap to a file ",
-	Long:  `output bootstrap to a file, include bootstrap server, miners...`,
+// allCmd represents the all command
+var bootstrappushallCmd = &cobra.Command{
+	Use:   "all",
+	Short: "push all bootstrap to github",
+	Long: `push all bootstrap to github`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if _, err := cmdcommon.IsProcessStarted(); err != nil {
 			log.Println(err)
 			return
 		}
 
-
-		var param []string
-		param = append(param, bootstrapOutputFile)
-
-		cmdclient.StringOpCmdSend("", cmdcommon.CMD_BOOTSTRAP_LIST, param)
-
+		cmdclient.DefaultCmdSend("", cmdcommon.CMD_BOOTSTRAP_PUSHALL)
 	},
 }
 
 func init() {
-	bootstrapCmd.AddCommand(bootstrapoutputCmd)
+	bootstrappushCmd.AddCommand(bootstrappushallCmd)
 
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
-	// outputCmd.PersistentFlags().String("foo", "", "A help for foo")
+	// allCmd.PersistentFlags().String("foo", "", "A help for foo")
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
-	// outputCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	// allCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 
-	bootstrapoutputCmd.Flags().StringVarP(&bootstrapOutputFile, "filename", "f", "bootstrap.list", "output a bootstrap server list")
-	//bootstrapoutputCmd.Flags().BoolVarP(&bootstrapToGithub,"togithub","t",false,"push bootstrap to github")
+
 
 }

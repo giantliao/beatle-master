@@ -22,7 +22,7 @@ import (
 )
 
 // ethCmd represents the eth command
-var ethCmd = &cobra.Command{
+var walletethCmd = &cobra.Command{
 	Use:   "eth",
 	Short: "import wallet eth account",
 	Long:  `import wallet eth account`,
@@ -32,7 +32,7 @@ var ethCmd = &cobra.Command{
 }
 
 func init() {
-	importCmd.AddCommand(ethCmd)
+	walletimportCmd.AddCommand(walletethCmd)
 
 	// Here you will define your flags and configuration settings.
 

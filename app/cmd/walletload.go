@@ -23,7 +23,7 @@ import (
 )
 
 // loadCmd represents the load command
-var loadCmd = &cobra.Command{
+var walletloadCmd = &cobra.Command{
 	Use:   "load",
 	Short: "load wallet",
 	Long:  `load wallet`,
@@ -48,7 +48,7 @@ var loadCmd = &cobra.Command{
 }
 
 func init() {
-	walletCmd.AddCommand(loadCmd)
+	walletCmd.AddCommand(walletloadCmd)
 
 	// Here you will define your flags and configuration settings.
 

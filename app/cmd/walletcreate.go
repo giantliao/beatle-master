@@ -24,7 +24,7 @@ import (
 )
 
 // createCmd represents the create command
-var createCmd = &cobra.Command{
+var walletcreateCmd = &cobra.Command{
 	Use:   "create",
 	Short: "create wallet",
 	Long:  `create wallet`,
@@ -49,7 +49,7 @@ var createCmd = &cobra.Command{
 }
 
 func init() {
-	walletCmd.AddCommand(createCmd)
+	walletCmd.AddCommand(walletcreateCmd)
 
 	// Here you will define your flags and configuration settings.
 

@@ -22,7 +22,7 @@ import (
 )
 
 // trxCmd represents the trx command
-var trxCmd = &cobra.Command{
+var wallettrxCmd = &cobra.Command{
 	Use:   "trx",
 	Short: "import wallet trx account",
 	Long:  `import wallet trx account`,
@@ -32,7 +32,7 @@ var trxCmd = &cobra.Command{
 }
 
 func init() {
-	importCmd.AddCommand(trxCmd)
+	walletimportCmd.AddCommand(wallettrxCmd)
 
 	// Here you will define your flags and configuration settings.
 

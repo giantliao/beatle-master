@@ -22,7 +22,7 @@ import (
 )
 
 // importCmd represents the import command
-var importCmd = &cobra.Command{
+var walletimportCmd = &cobra.Command{
 	Use:   "import",
 	Short: "import wallet [trx,eth] account",
 	Long:  `import wallet [trx,eth] account`,
@@ -32,7 +32,7 @@ var importCmd = &cobra.Command{
 }
 
 func init() {
-	walletCmd.AddCommand(importCmd)
+	walletCmd.AddCommand(walletimportCmd)
 
 	// Here you will define your flags and configuration settings.
 

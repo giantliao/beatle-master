@@ -22,7 +22,7 @@ import (
 )
 
 // exportCmd represents the export command
-var exportCmd = &cobra.Command{
+var walletexportCmd = &cobra.Command{
 	Use:   "export",
 	Short: "export wallet",
 	Long:  `export wallet`,
@@ -32,7 +32,7 @@ var exportCmd = &cobra.Command{
 }
 
 func init() {
-	walletCmd.AddCommand(exportCmd)
+	walletCmd.AddCommand(walletexportCmd)
 
 	// Here you will define your flags and configuration settings.
 

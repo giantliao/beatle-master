@@ -23,7 +23,7 @@ import (
 )
 
 // showCmd represents the show command
-var showCmd = &cobra.Command{
+var walletshowCmd = &cobra.Command{
 	Use:   "show",
 	Short: "show wallet",
 	Long:  `show wallet`,
@@ -48,7 +48,7 @@ var showCmd = &cobra.Command{
 }
 
 func init() {
-	walletCmd.AddCommand(showCmd)
+	walletCmd.AddCommand(walletshowCmd)
 
 	// Here you will define your flags and configuration settings.
 

@@ -24,23 +24,34 @@ import (
 )
 
 // addCmd represents the add command
-var addCmd = &cobra.Command{
+var(
+	bootstrapOwner string
+	bootstrapRepository string
+	bootstrapPath string
+	bootstrapReadToken string
+	bootstrapCommitName string
+	bootstrapCommitEmail string
+)
+
+var bootstrapaddCmd = &cobra.Command{
 	Use:   "add",
-	Short: "add bootstrap http server file url",
-	Long:  `add bootstrap http server file url`,
+	Short: "add bootstrap server",
+	Long:  `add bootstrap server`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if _, err := cmdcommon.IsProcessStarted(); err != nil {
 			log.Println(err)
 			return
 		}
 
-		if len(args) < 1 {
+		if bootstrapOwner==""||bootstrapRepository==""||bootstrapPath==""||
+					bootstrapReadToken=="" || bootstrapCommitEmail == "" || bootstrapCommitName == ""{
 			log.Println("please enter bootstrap server")
 			return
 		}
 
+
 		var param []string
-		param = append(param, args[0])
+		param = append(param, bootstrapOwner, bootstrapRepository, bootstrapPath, bootstrapReadToken,bootstrapCommitName,bootstrapCommitEmail)
 
 		cmdclient.StringOpCmdSend("", cmdcommon.CMD_BOOTSTRAP_ADD, param)
 
@@ -48,7 +59,7 @@ var addCmd = &cobra.Command{
 }
 
 func init() {
-	bootstrapCmd.AddCommand(addCmd)
+	bootstrapCmd.AddCommand(bootstrapaddCmd)
 
 	// Here you will define your flags and configuration settings.
 
@@ -59,4 +70,12 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// addCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+
+	bootstrapaddCmd.Flags().StringVarP(&bootstrapOwner,"owner","o","","repository owner")
+	bootstrapaddCmd.Flags().StringVarP(&bootstrapRepository,"repository","r","","repository name")
+	bootstrapaddCmd.Flags().StringVarP(&bootstrapPath,"path","p","","file path")
+	bootstrapaddCmd.Flags().StringVarP(&bootstrapReadToken,"token","t","","token for read bootstrap file")
+	bootstrapaddCmd.Flags().StringVarP(&bootstrapCommitName,"commitname","n","","name for commit")
+	bootstrapaddCmd.Flags().StringVarP(&bootstrapCommitEmail,"commitemail","e","","email for commit")
+
 }
