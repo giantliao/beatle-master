@@ -84,7 +84,7 @@ var rootCmd = &cobra.Command{
 		}
 
 		err = wallet.LoadWallet(keypassword)
-		if err!=nil{
+		if err != nil {
 			panic("load wallet failed")
 		}
 

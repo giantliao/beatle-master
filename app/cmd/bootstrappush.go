@@ -30,7 +30,7 @@ var bootstrapPushIdx int
 var bootstrappushCmd = &cobra.Command{
 	Use:   "push",
 	Short: "push bootstrap to github",
-	Long: `push bootstrap to github`,
+	Long:  `push bootstrap to github`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if _, err := cmdcommon.IsProcessStarted(); err != nil {
 			log.Println(err)
@@ -57,6 +57,6 @@ func init() {
 	// is called directly, e.g.:
 	// pushCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 
-	bootstrappushCmd.Flags().IntVarP(&bootstrapPushIdx,"index","i",0,"bootstrap index")
+	bootstrappushCmd.Flags().IntVarP(&bootstrapPushIdx, "index", "i", 0, "bootstrap index")
 
 }

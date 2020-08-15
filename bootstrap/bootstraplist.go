@@ -49,8 +49,8 @@ func CollectBootsTrapList(count int) *miners.BootsTrapMiners {
 	btms.EthAccPoint = cfg.EthAccessPoint
 	btms.TrxAccPoint = cfg.TrxAccessPoint
 
-	for i:=0;i<len(cfg.BootsTrapDownload);i++{
-		btms.NextDownloadPoint = append(btms.NextDownloadPoint,cfg.BootsTrapDownload[i].DownloadPoint)
+	for i := 0; i < len(cfg.BootsTrapDownload); i++ {
+		btms.NextDownloadPoint = append(btms.NextDownloadPoint, cfg.BootsTrapDownload[i].DownloadPoint)
 	}
 
 	btms.BeatlesMasterAddr = w.BtlAddress()
@@ -75,93 +75,90 @@ func GenBootstrapFileContent() (string, error) {
 
 }
 
-func Push2Github(idx int) (msg string, err error)  {
-	cfg :=config.GetCBtlm()
-	if len(cfg.BootsTrapDownload) <= idx || idx < 0{
-		return "",errors.New("github access point index error")
+func Push2Github(idx int) (msg string, err error) {
+	cfg := config.GetCBtlm()
+	if len(cfg.BootsTrapDownload) <= idx || idx < 0 {
+		return "", errors.New("github access point index error")
 	}
-	content,err:=GenBootstrapFileContent()
-	if err!=nil{
-		return "",err
-	}
-
-	err = push2github(cfg.BootsTrapDownload[idx],content)
-	if err!=nil{
-		return strconv.Itoa(idx)+" : "+cfg.BootsTrapDownload[idx].String()+" failed",nil
+	content, err := GenBootstrapFileContent()
+	if err != nil {
+		return "", err
 	}
 
-	return strconv.Itoa(idx)+" : "+cfg.BootsTrapDownload[idx].String()+" success",nil
+	err = push2github(cfg.BootsTrapDownload[idx], content)
+	if err != nil {
+		return strconv.Itoa(idx) + " : " + cfg.BootsTrapDownload[idx].String() + " failed", nil
+	}
+
+	return strconv.Itoa(idx) + " : " + cfg.BootsTrapDownload[idx].String() + " success", nil
 }
 
-
-func Push2Githubs() (msg string, err error)  {
+func Push2Githubs() (msg string, err error) {
 	cfg := config.GetCBtlm()
-	if len(cfg.BootsTrapDownload) == 0{
-		return "",errors.New("please input github access point")
+	if len(cfg.BootsTrapDownload) == 0 {
+		return "", errors.New("please input github access point")
 	}
 
-	content,err:=GenBootstrapFileContent()
-	if err!=nil{
-		return "",err
+	content, err := GenBootstrapFileContent()
+	if err != nil {
+		return "", err
 	}
 
-	succ:=""
-	fail:=""
+	succ := ""
+	fail := ""
 
-	for i:=0;i<len(cfg.BootsTrapDownload);i++{
-		err = push2github(cfg.BootsTrapDownload[i],content)
-		if err!=nil{
-			if fail != ""{
+	for i := 0; i < len(cfg.BootsTrapDownload); i++ {
+		err = push2github(cfg.BootsTrapDownload[i], content)
+		if err != nil {
+			if fail != "" {
 				fail += "\r\n"
 			}
-			fail += strconv.Itoa(i)+" : " + cfg.BootsTrapDownload[i].String()
-		}else{
-			if succ != ""{
+			fail += strconv.Itoa(i) + " : " + cfg.BootsTrapDownload[i].String()
+		} else {
+			if succ != "" {
 				succ += "\r\n"
 			}
-			succ += strconv.Itoa(i)+" : "+ cfg.BootsTrapDownload[i].String()
+			succ += strconv.Itoa(i) + " : " + cfg.BootsTrapDownload[i].String()
 		}
 	}
 
-	if succ != ""{
+	if succ != "" {
 		msg = "success: \r\n"
 	}
 	msg += succ
-	if succ != ""{
+	if succ != "" {
 		msg += "\r\n"
 	}
 	msg += fail
 
-	return msg,nil
+	return msg, nil
 }
 
-func push2github(ap *config.GithubAccessPoint,content string) error  {
-	gc:=libgithub.NewGithubClient(ap.DownloadPoint.ReadToken,
+func push2github(ap *config.GithubAccessPoint, content string) error {
+	gc := libgithub.NewGithubClient(ap.DownloadPoint.ReadToken,
 		ap.DownloadPoint.Owner,
 		ap.DownloadPoint.Repository,
 		ap.DownloadPoint.Path,
 		ap.Name,
 		ap.Email)
-	_,hash,err:=gc.GetContent()
-	if err!=nil{
-		if strings.Contains(err.Error(),"404 Not Found"){
-			if err!=gc.CreateFile("license master create",content){
+	_, hash, err := gc.GetContent()
+	if err != nil {
+		if strings.Contains(err.Error(), "404 Not Found") {
+			if err != gc.CreateFile("license master create", content) {
 				return err
 			}
 			return nil
-		}else{
+		} else {
 			return err
 		}
 	}
 
-	err = gc.UpdateFile2("license master update",content,hash)
-	if err!=nil{
+	err = gc.UpdateFile2("license master update", content, hash)
+	if err != nil {
 		return err
 	}
 	return nil
 }
-
-
 
 func Save2File(fileName string) error {
 

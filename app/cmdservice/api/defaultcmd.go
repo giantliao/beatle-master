@@ -77,9 +77,9 @@ func (cds *CmdDefaultServer) bootstrapShow() string {
 	return msg
 }
 
-func (cds *CmdDefaultServer)bootstrapPushAll() string  {
-	msg,err:=bootstrap.Push2Githubs()
-	if err!=nil{
+func (cds *CmdDefaultServer) bootstrapPushAll() string {
+	msg, err := bootstrap.Push2Githubs()
+	if err != nil {
 		return err.Error()
 	}
 

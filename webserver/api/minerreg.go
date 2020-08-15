@@ -28,8 +28,8 @@ func (mr *MinerRegister) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if m.Ipv4Addr == ""{
-		m.Ipv4Addr,_ = httputil.GetRemoteAddr(r.RemoteAddr)
+	if m.Ipv4Addr == "" {
+		m.Ipv4Addr, _ = httputil.GetRemoteAddr(r.RemoteAddr)
 	}
 
 	mdb := db.GetMinersDb()

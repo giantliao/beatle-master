@@ -27,7 +27,7 @@ import (
 var bootstrappushallCmd = &cobra.Command{
 	Use:   "all",
 	Short: "push all bootstrap to github",
-	Long: `push all bootstrap to github`,
+	Long:  `push all bootstrap to github`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if _, err := cmdcommon.IsProcessStarted(); err != nil {
 			log.Println(err)
@@ -50,7 +50,5 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// allCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
-
-
 
 }

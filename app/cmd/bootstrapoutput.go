@@ -27,7 +27,6 @@ var (
 	//bootstrapToGithub bool
 )
 
-
 // outputCmd represents the output command
 var bootstrapoutputCmd = &cobra.Command{
 	Use:   "output",
@@ -38,7 +37,6 @@ var bootstrapoutputCmd = &cobra.Command{
 			log.Println(err)
 			return
 		}
-
 
 		var param []string
 		param = append(param, bootstrapOutputFile)

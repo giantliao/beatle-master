@@ -33,7 +33,7 @@ func IsValidLicense(cid account.BeatleAddress, w w2.WalletIntf, l *licenses.Lice
 
 	forsig, _ := json.Marshal(l.Content)
 
-	return w.BtlVerifySig(forsig,base58.Decode(l.Signature))
+	return w.BtlVerifySig(forsig, base58.Decode(l.Signature))
 
 	//bsig := w.BtlSign(forsig)
 	//

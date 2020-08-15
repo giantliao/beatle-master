@@ -24,12 +24,12 @@ import (
 )
 
 // addCmd represents the add command
-var(
-	bootstrapOwner string
-	bootstrapRepository string
-	bootstrapPath string
-	bootstrapReadToken string
-	bootstrapCommitName string
+var (
+	bootstrapOwner       string
+	bootstrapRepository  string
+	bootstrapPath        string
+	bootstrapReadToken   string
+	bootstrapCommitName  string
 	bootstrapCommitEmail string
 )
 
@@ -43,15 +43,14 @@ var bootstrapaddCmd = &cobra.Command{
 			return
 		}
 
-		if bootstrapOwner==""||bootstrapRepository==""||bootstrapPath==""||
-					bootstrapReadToken=="" || bootstrapCommitEmail == "" || bootstrapCommitName == ""{
+		if bootstrapOwner == "" || bootstrapRepository == "" || bootstrapPath == "" ||
+			bootstrapReadToken == "" || bootstrapCommitEmail == "" || bootstrapCommitName == "" {
 			log.Println("please enter bootstrap server")
 			return
 		}
 
-
 		var param []string
-		param = append(param, bootstrapOwner, bootstrapRepository, bootstrapPath, bootstrapReadToken,bootstrapCommitName,bootstrapCommitEmail)
+		param = append(param, bootstrapOwner, bootstrapRepository, bootstrapPath, bootstrapReadToken, bootstrapCommitName, bootstrapCommitEmail)
 
 		cmdclient.StringOpCmdSend("", cmdcommon.CMD_BOOTSTRAP_ADD, param)
 
@@ -71,11 +70,11 @@ func init() {
 	// is called directly, e.g.:
 	// addCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 
-	bootstrapaddCmd.Flags().StringVarP(&bootstrapOwner,"owner","o","","repository owner")
-	bootstrapaddCmd.Flags().StringVarP(&bootstrapRepository,"repository","r","","repository name")
-	bootstrapaddCmd.Flags().StringVarP(&bootstrapPath,"path","p","","file path")
-	bootstrapaddCmd.Flags().StringVarP(&bootstrapReadToken,"token","t","","token for read bootstrap file")
-	bootstrapaddCmd.Flags().StringVarP(&bootstrapCommitName,"commitname","n","","name for commit")
-	bootstrapaddCmd.Flags().StringVarP(&bootstrapCommitEmail,"commitemail","e","","email for commit")
+	bootstrapaddCmd.Flags().StringVarP(&bootstrapOwner, "owner", "o", "", "repository owner")
+	bootstrapaddCmd.Flags().StringVarP(&bootstrapRepository, "repository", "r", "", "repository name")
+	bootstrapaddCmd.Flags().StringVarP(&bootstrapPath, "path", "p", "", "file path")
+	bootstrapaddCmd.Flags().StringVarP(&bootstrapReadToken, "token", "t", "", "token for read bootstrap file")
+	bootstrapaddCmd.Flags().StringVarP(&bootstrapCommitName, "commitname", "n", "", "name for commit")
+	bootstrapaddCmd.Flags().StringVarP(&bootstrapCommitEmail, "commitemail", "e", "", "email for commit")
 
 }

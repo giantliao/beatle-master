@@ -27,7 +27,7 @@ func (cso *CmdStringOPSrv) StringOpDo(cxt context.Context, so *cmdpb.StringOP) (
 	case cmdcommon.CMD_BOOTSTRAP_LIST:
 		msg = cso.bootstrapList(so.Param[0])
 	case cmdcommon.CMD_BOOTSTRAP_ADD:
-		msg = cso.bootstrapAdd(so.Param[0],so.Param[1],so.Param[2],so.Param[3],so.Param[4],so.Param[5])
+		msg = cso.bootstrapAdd(so.Param[0], so.Param[1], so.Param[2], so.Param[3], so.Param[4], so.Param[5])
 	case cmdcommon.CMD_BOOTSTRAP_DEL:
 		msg = cso.bootstrapDel(so.Param[0])
 	case cmdcommon.CMD_BOOTSTRAP_PUSH:
@@ -89,10 +89,10 @@ func (cso *CmdStringOPSrv) bootstrapList(filename string) string {
 	return "save to file: " + filename + " successful"
 }
 
-func (cso *CmdStringOPSrv) bootstrapAdd(owner ,repository , filePath , readToken ,name,email string) string {
+func (cso *CmdStringOPSrv) bootstrapAdd(owner, repository, filePath, readToken, name, email string) string {
 	cfg := config.GetCBtlm()
 
-	err := cfg.AddBootstrap(owner,repository,filePath,readToken,name,email)
+	err := cfg.AddBootstrap(owner, repository, filePath, readToken, name, email)
 
 	if err != nil {
 		return err.Error()
@@ -117,15 +117,15 @@ func (cso *CmdStringOPSrv) bootstrapDel(idxstr string) string {
 	return "delete bootstrap server index: " + idxstr + " successful"
 }
 
-func (cso *CmdStringOPSrv)bootstrapPush(idxstr string) string  {
-	idx,err:=strconv.Atoi(idxstr)
-	if err!=nil{
+func (cso *CmdStringOPSrv) bootstrapPush(idxstr string) string {
+	idx, err := strconv.Atoi(idxstr)
+	if err != nil {
 		return err.Error()
 	}
 	var msg string
 
-	msg,err = bootstrap.Push2Github(idx)
-	if err!=nil{
+	msg, err = bootstrap.Push2Github(idx)
+	if err != nil {
 		return err.Error()
 	}
 

@@ -18,17 +18,16 @@ const (
 	BTLM_DB_PATH      = "db"
 )
 
-
 type GithubAccessPoint struct {
 	DownloadPoint *miners.GithubDownLoadPoint
-	Name string
-	Email string
+	Name          string
+	Email         string
 }
 
-func (gap *GithubAccessPoint)String() string{
+func (gap *GithubAccessPoint) String() string {
 	msg := gap.DownloadPoint.String()
-	msg += "  name: "+ gap.Name
-	msg += "  email: "+ gap.Email
+	msg += "  name: " + gap.Name
+	msg += "  email: " + gap.Email
 
 	return msg
 }
@@ -255,24 +254,28 @@ func (bc *BtlMasterConf) GetRegisterMinerWebPath() string {
 	return "/" + bc.ApiPath + "/" + bc.RegisterMinerPath
 }
 
-func (bc *BtlMasterConf) AddBootstrap(owner ,repository , filePath , readToken ,name ,email string) error {
-	gd:=&miners.GithubDownLoadPoint{}
-	gd.Owner = owner
-	gd.ReadToken = readToken
-	gd.Repository = repository
-	gd.Path = filePath
+func (bc *BtlMasterConf) AddBootstrap(owner, repository, filePath, readToken, name, email string) error {
+	gd := &GithubAccessPoint{}
+	gd.DownloadPoint.Owner = owner
+	gd.DownloadPoint.ReadToken = readToken
+	gd.DownloadPoint.Repository = repository
+	gd.DownloadPoint.Path = filePath
+	gd.Name = name
+	gd.Email = email
 
-	for i:=0;i<len(bc.BootsTrapDownload);i++{
-		btd:=bc.BootsTrapDownload[i]
-		if btd.DownloadPoint.Path == gd.Path && btd.DownloadPoint.Repository == gd.Repository && btd.DownloadPoint.ReadToken == gd.ReadToken && btd.DownloadPoint.Owner == gd.Owner{
-			if btd.Name == name && btd.Email == email{
+	dp := gd.DownloadPoint
+
+	for i := 0; i < len(bc.BootsTrapDownload); i++ {
+		btd := bc.BootsTrapDownload[i]
+		if btd.DownloadPoint.Path == dp.Path && btd.DownloadPoint.Repository == dp.Repository && btd.DownloadPoint.ReadToken == dp.ReadToken && btd.DownloadPoint.Owner == dp.Owner {
+			if btd.Name == name && btd.Email == email {
 				return errors.New("accept point duplicated")
 			}
 
 		}
 	}
 
-	bc.BootsTrapDownload = append(bc.BootsTrapDownload,gd)
+	bc.BootsTrapDownload = append(bc.BootsTrapDownload, gd)
 
 	bc.Save()
 	return nil
