@@ -2,6 +2,7 @@ package bootstrap
 
 import (
 	"errors"
+	"fmt"
 	"github.com/giantliao/beatles-master/config"
 	"github.com/giantliao/beatles-master/db"
 	"github.com/giantliao/beatles-master/wallet"
@@ -126,10 +127,13 @@ func Push2Githubs() (msg string, err error) {
 		msg = "success: \r\n"
 	}
 	msg += succ
-	if succ != "" {
+	if succ != "" || fail != "" {
 		msg += "\r\n"
 	}
-	msg += fail
+	if fail != "" {
+		msg += "failed: \r\n"
+		msg += fail
+	}
 
 	return msg, nil
 }
@@ -143,6 +147,7 @@ func push2github(ap *config.GithubAccessPoint, content string) error {
 		ap.Email)
 	_, hash, err := gc.GetContent()
 	if err != nil {
+		fmt.Println(err.Error())
 		if strings.Contains(err.Error(), "404 Not Found") {
 			if err != gc.CreateFile("license master create", content) {
 				return err
@@ -155,6 +160,7 @@ func push2github(ap *config.GithubAccessPoint, content string) error {
 
 	err = gc.UpdateFile2("license master update", content, hash)
 	if err != nil {
+		fmt.Println("2", err.Error())
 		return err
 	}
 	return nil

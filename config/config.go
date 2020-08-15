@@ -256,6 +256,7 @@ func (bc *BtlMasterConf) GetRegisterMinerWebPath() string {
 
 func (bc *BtlMasterConf) AddBootstrap(owner, repository, filePath, readToken, name, email string) error {
 	gd := &GithubAccessPoint{}
+	gd.DownloadPoint = &miners.GithubDownLoadPoint{}
 	gd.DownloadPoint.Owner = owner
 	gd.DownloadPoint.ReadToken = readToken
 	gd.DownloadPoint.Repository = repository

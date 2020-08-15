@@ -61,7 +61,7 @@ func inputChoose() (choose string, err error) {
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "cc",
+	Use:   "btlm",
 	Short: "start beatles master in current shell",
 	Long:  `start beatles master in current shell`,
 	Run: func(cmd *cobra.Command, args []string) {
@@ -75,6 +75,11 @@ var rootCmd = &cobra.Command{
 		InitCfg()
 		cfg := config.GetCBtlm()
 		cfg.Save()
+
+		if cfg.EthAccessPoint == "" {
+			log.Println("please init first")
+			return
+		}
 
 		if keypassword == "" {
 			if keypassword, err = inputpassword(); err != nil {

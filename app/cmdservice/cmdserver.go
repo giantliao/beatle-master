@@ -4,6 +4,7 @@ import (
 	"github.com/giantliao/beatles-master/webserver"
 	"google.golang.org/grpc"
 	"sync"
+	"time"
 
 	"net"
 
@@ -76,6 +77,8 @@ func (cs *cmdServer) StartCmdService() {
 
 func (cs *cmdServer) StopCmdService() {
 	config.GetCBtlm().Save()
+
+	time.Sleep(time.Second * 5)
 
 	cs.grpcServer.Stop()
 	log.Println("Command line server stoped")
