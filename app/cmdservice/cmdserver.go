@@ -30,6 +30,8 @@ type CmdServerInter interface {
 var (
 	cmdServerInst     CmdServerInter
 	cmdServerInstLock sync.Mutex
+	stopflag          bool
+	stopflagLock      sync.Mutex
 )
 
 func GetCmdServerInst() CmdServerInter {
@@ -85,6 +87,19 @@ func (cs *cmdServer) StopCmdService() {
 }
 
 func stop() {
+
+	if !stopflag {
+		stopflagLock.Lock()
+		if !stopflag {
+			stopflag = true
+		} else {
+			stopflagLock.Unlock()
+			return
+		}
+		stopflagLock.Unlock()
+	} else {
+		return
+	}
 
 	webserver.StopWebDaemon()
 

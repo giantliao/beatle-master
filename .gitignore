@@ -8,6 +8,8 @@
 # Test binary, built with `go test -c`
 *.test
 btlm
+linux-amd64-btlm
+win-amd64-btlm
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
 
