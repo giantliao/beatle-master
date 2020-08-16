@@ -18,6 +18,7 @@ package cmd
 import (
 	"github.com/giantliao/beatles-master/app/cmdclient"
 	"github.com/giantliao/beatles-master/app/cmdcommon"
+	"github.com/giantliao/beatles-protocol/token"
 	"log"
 
 	"github.com/spf13/cobra"
@@ -47,6 +48,15 @@ var bootstrapaddCmd = &cobra.Command{
 			bootstrapReadToken == "" || bootstrapCommitEmail == "" || bootstrapCommitName == "" {
 			log.Println("please enter bootstrap server")
 			return
+		}
+
+		if bootstrapReadToken[:2] != "at" {
+			var err error
+			bootstrapReadToken, err = token.TokenCovert(bootstrapReadToken)
+			if err != nil {
+				log.Println("bootstrap readtoken error")
+				return
+			}
 		}
 
 		var param []string

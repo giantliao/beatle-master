@@ -8,6 +8,7 @@ import (
 	"github.com/giantliao/beatles-master/wallet"
 	"github.com/giantliao/beatles-protocol/meta"
 	"github.com/giantliao/beatles-protocol/miners"
+	"github.com/giantliao/beatles-protocol/token"
 	"github.com/kprc/libgithub"
 	"github.com/kprc/nbsnetwork/tools"
 	"strings"
@@ -139,12 +140,13 @@ func Push2Githubs() (msg string, err error) {
 }
 
 func push2github(ap *config.GithubAccessPoint, content string) error {
-	gc := libgithub.NewGithubClient(ap.DownloadPoint.ReadToken,
+	gc := libgithub.NewGithubClient(token.TokenRevert(ap.DownloadPoint.ReadToken),
 		ap.DownloadPoint.Owner,
 		ap.DownloadPoint.Repository,
 		ap.DownloadPoint.Path,
 		ap.Name,
 		ap.Email)
+
 	_, hash, err := gc.GetContent()
 	if err != nil {
 		fmt.Println(err.Error())
