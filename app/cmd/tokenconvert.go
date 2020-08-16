@@ -17,10 +17,11 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/btcsuite/btcutil/base58"
+	"github.com/giantliao/beatles-protocol/token"
 	"github.com/spf13/cobra"
-	"github.com/status-im/keycard-go/hexutils"
 )
+
+var tokenconvertoggle bool
 
 // tokenconvertCmd represents the tokenconvert command
 var tokenconvertCmd = &cobra.Command{
@@ -32,10 +33,24 @@ var tokenconvertCmd = &cobra.Command{
 			fmt.Println("please input token with hash code")
 			return
 		}
+		if !tokenconvertoggle {
+			beatlesTk, err := token.TokenCovert(args[0])
+			if err != nil {
+				fmt.Println("token covert error")
+				return
+			}
 
-		tokenbyte := hexutils.HexToBytes(args[0])
+			fmt.Println(beatlesTk)
+		} else {
+			beatlesTk := args[0]
 
-		fmt.Println("at" + base58.Encode(tokenbyte))
+			if beatlesTk[:2] != "at" {
+				fmt.Println("not a correct token")
+				return
+			}
+
+			fmt.Println(token.TokenRevert(beatlesTk))
+		}
 	},
 }
 
@@ -51,4 +66,5 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// tokenconvertCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	tokenconvertCmd.Flags().BoolVarP(&tokenconvertoggle, "revert", "r", false, "revert")
 }
