@@ -98,9 +98,9 @@ func (mdb *MinersDb) Update(ipv4 string, port int, location string, id account.B
 		md.CreateTime = now
 	} else {
 		json.Unmarshal([]byte(minerDescStr), md)
-		if md.Ipv4Addr == ipv4 && port == md.Port && location == md.Location {
-			return errors.New("nothing to update")
-		}
+		//if md.Ipv4Addr == ipv4 && port == md.Port && location == md.Location {
+		//	return errors.New("nothing to update")
+		//}
 
 		md.Ipv4Addr = ipv4
 		md.Location = location
