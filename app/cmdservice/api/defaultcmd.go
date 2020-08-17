@@ -7,6 +7,7 @@ import (
 	"github.com/giantliao/beatles-master/app/cmdpb"
 	"github.com/giantliao/beatles-master/bootstrap"
 	"github.com/giantliao/beatles-master/config"
+	"github.com/giantliao/beatles-master/db"
 	"time"
 )
 
@@ -28,6 +29,10 @@ func (cds *CmdDefaultServer) DefaultCmdDo(ctx context.Context,
 		msg = cds.bootstrapShow()
 	case cmdcommon.CMD_BOOTSTRAP_PUSHALL:
 		msg = cds.bootstrapPushAll()
+	case cmdcommon.CMD_MINER_SHOW:
+		msg = cds.showMiners()
+	case cmdcommon.CMD_MINER_SAVE:
+		msg = cds.saveMiners()
 	}
 
 	if msg == "" {
@@ -84,4 +89,36 @@ func (cds *CmdDefaultServer) bootstrapPushAll() string {
 	}
 
 	return msg
+}
+
+func (cds *CmdDefaultServer) showMiners() string {
+	mdb := db.GetMinersDb()
+	mdb.Iterator()
+
+	msg := ""
+
+	for {
+		_, v, err := mdb.Next()
+		if err != nil {
+			if msg == "" {
+				msg = "no miners in db"
+			}
+			return msg
+		}
+		if msg != "" {
+			msg += "\r\n"
+		}
+		msg += v.String()
+
+	}
+
+	return msg
+}
+
+func (cds *CmdDefaultServer) saveMiners() string {
+	mdb := db.GetMinersDb()
+
+	mdb.Save()
+
+	return "save miners to db successfully"
 }

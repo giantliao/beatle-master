@@ -5,7 +5,6 @@ import (
 	"github.com/giantliao/beatles-master/db"
 	"github.com/giantliao/beatles-protocol/miners"
 	"github.com/kprc/nbsnetwork/tools/httputil"
-
 	"net/http"
 )
 
@@ -33,7 +32,7 @@ func (mr *MinerRegister) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	mdb := db.GetMinersDb()
-	if err = mdb.Insert(m.Ipv4Addr, m.Port, m.Location, m.MinerId); err != nil {
+	if err = mdb.Update(m.Ipv4Addr, m.Port, m.Location, m.MinerId); err != nil {
 		w.WriteHeader(500)
 		fmt.Fprintf(w, err.Error())
 		return

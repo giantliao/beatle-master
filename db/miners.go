@@ -3,6 +3,7 @@ package db
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"github.com/giantliao/beatles-master/config"
 	"github.com/kprc/libeth/account"
 	"github.com/kprc/nbsnetwork/db"
@@ -49,6 +50,19 @@ type MinerDesc struct {
 	ID         account.BeatleAddress `json:"-"`
 	CreateTime int64                 `json:"create_time"`
 	UpdateTime int64                 `json:"update_time"`
+}
+
+func (md *MinerDesc) String() string {
+	msg := ""
+	msg += fmt.Sprintf("%-50s", md.ID.String())
+	msg += fmt.Sprintf("%-18s", md.Ipv4Addr)
+	msg += fmt.Sprintf("%-7d", md.Port)
+	msg += fmt.Sprintf("%-12s", md.Location)
+	msg += fmt.Sprintf("%-20s", tools.Int64Time2String(md.CreateTime))
+	msg += fmt.Sprintf("%-20s", tools.Int64Time2String(md.UpdateTime))
+
+	return msg
+
 }
 
 func (mdb *MinersDb) Insert(ipv4 string, port int, location string, id account.BeatleAddress) error {

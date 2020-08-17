@@ -6,7 +6,9 @@ import (
 	"github.com/giantliao/beatles-master/app/cmdpb"
 	"github.com/giantliao/beatles-master/bootstrap"
 	"github.com/giantliao/beatles-master/config"
+	"github.com/giantliao/beatles-master/db"
 	"github.com/giantliao/beatles-master/wallet"
+	"github.com/kprc/libeth/account"
 	"strconv"
 
 	"time"
@@ -32,6 +34,8 @@ func (cso *CmdStringOPSrv) StringOpDo(cxt context.Context, so *cmdpb.StringOP) (
 		msg = cso.bootstrapDel(so.Param[0])
 	case cmdcommon.CMD_BOOTSTRAP_PUSH:
 		msg = cso.bootstrapPush(so.Param[0])
+	case cmdcommon.CMD_MINER_REMOVE:
+		msg = cso.removeMiner(so.Param[0])
 	default:
 		return encapResp("Command Not Found"), nil
 	}
@@ -130,4 +134,15 @@ func (cso *CmdStringOPSrv) bootstrapPush(idxstr string) string {
 	}
 
 	return msg
+}
+func (cso *CmdStringOPSrv) removeMiner(id string) string {
+	mdb := db.GetMinersDb()
+	if _, err := mdb.Find(account.BeatleAddress(id)); err != nil {
+		return "id: " + id + " not found"
+	}
+
+	mdb.Delete(account.BeatleAddress(id))
+
+	return "id: " + id + " delete successfully"
+
 }
