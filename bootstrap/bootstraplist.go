@@ -57,6 +57,7 @@ func CollectBootsTrapList(count int) *miners.BootsTrapMiners {
 
 	btms.BeatlesMasterAddr = w.BtlAddress()
 	btms.BeatlesEthAddr = w.AccountString()
+	btms.Price = cfg.BeatlesPrice
 
 	return btms
 }

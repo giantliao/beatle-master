@@ -41,6 +41,7 @@ type BtlMasterConf struct {
 	WalletSavePath string `json:"wallet_save_path"`
 
 	ApiPath           string `json:"api_path"`
+	NoncePricePath    string `json:"nonce_price_path"`
 	PurchasePath      string `json:"purchase_path"`
 	ListMinerPath     string `json:"list_miner_path"`
 	RegisterMinerPath string `json:"register_miner_path"`
@@ -51,6 +52,7 @@ type BtlMasterConf struct {
 
 	CurrentPrice float64 `json:"-"`
 	LastPrice    float64 `json:"-"`
+	BeatlesPrice float64 `json:"beatles_price"`
 
 	BootsTrapDownload []*GithubAccessPoint `json:"boots_trap_download"`
 }
@@ -66,6 +68,7 @@ func (bc *BtlMasterConf) InitCfg() *BtlMasterConf {
 	bc.WalletSavePath = "wallet.json"
 
 	bc.ApiPath = "api"
+	bc.NoncePricePath = "price"
 	bc.PurchasePath = "purchase"
 	bc.ListMinerPath = "list"
 	bc.RegisterMinerPath = "reg"
@@ -76,6 +79,8 @@ func (bc *BtlMasterConf) InitCfg() *BtlMasterConf {
 
 	bc.CurrentPrice = 0.01
 	bc.LastPrice = 0.01
+
+	bc.BeatlesPrice = 3.0 //3 dollars
 
 	return bc
 }
@@ -201,14 +206,6 @@ func (bc *BtlMasterConf) Save() {
 
 }
 
-func (bc *BtlMasterConf) GetPurchasePath() string {
-	return "http://" + bc.ApiPath + "/" + bc.PurchasePath
-}
-
-func (bc *BtlMasterConf) GetLittMinerPath() string {
-	return "http://" + bc.ApiPath + "/" + bc.ListMinerPath
-}
-
 func IsInitialized() bool {
 	if tools.FileExists(GetBtlmCFGFile()) {
 		return true
@@ -240,6 +237,10 @@ func (bc *BtlMasterConf) GetReceiptsDbFile() string {
 
 func (bc *BtlMasterConf) GetWalletSavePath() string {
 	return path.Join(GetBtlmCHomeDir(), bc.WalletSavePath)
+}
+
+func (bc *BtlMasterConf) GetPriceWebPath() string {
+	return "/" + bc.ApiPath + "/" + bc.NoncePricePath
 }
 
 func (bc *BtlMasterConf) GetpurchaseWebPath() string {

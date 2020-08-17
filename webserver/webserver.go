@@ -17,9 +17,11 @@ func StartWebDaemon() {
 	mux := http.NewServeMux()
 
 	cfg := config.GetCBtlm()
+	mux.Handle(cfg.GetRegisterMinerWebPath(), &api.MinerRegister{})
+
+	mux.Handle(cfg.GetPriceWebPath(), &api.NoncePriceSrv{})
 	mux.Handle(cfg.GetpurchaseWebPath(), &api.PurchaseLicense{})
 	mux.Handle(cfg.GetListMinersWebPath(), &api.ListMiners{})
-	mux.Handle(cfg.GetRegisterMinerWebPath(), &api.MinerRegister{})
 
 	addr := ":" + strconv.Itoa(config.GetCBtlm().HttpServerPort)
 
@@ -32,7 +34,6 @@ func StartWebDaemon() {
 }
 
 func StopWebDaemon() {
-
 	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
 	webserver.Shutdown(ctx)
 
