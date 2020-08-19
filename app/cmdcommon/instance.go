@@ -20,6 +20,7 @@ const (
 	CMD_BOOTSTRAP_DEL  int32 = 7
 	CMD_BOOTSTRAP_PUSH int32 = 8
 	CMD_MINER_REMOVE   int32 = 9
+	CMD_DB_SHOW        int32 = 10
 
 	////CMD_JOIN_GROUP         int32 = 9
 	//CMD_QUIT_GROUP         int32 = 10

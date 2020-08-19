@@ -36,6 +36,8 @@ func (cso *CmdStringOPSrv) StringOpDo(cxt context.Context, so *cmdpb.StringOP) (
 		msg = cso.bootstrapPush(so.Param[0])
 	case cmdcommon.CMD_MINER_REMOVE:
 		msg = cso.removeMiner(so.Param[0])
+	case cmdcommon.CMD_DB_SHOW:
+		msg = cso.dbShow(so.Param[0])
 	default:
 		return encapResp("Command Not Found"), nil
 	}
@@ -145,4 +147,8 @@ func (cso *CmdStringOPSrv) removeMiner(id string) string {
 
 	return "id: " + id + " delete successfully"
 
+}
+
+func (cso *CmdStringOPSrv) dbShow(db string) string {
+	return "to implement"
 }

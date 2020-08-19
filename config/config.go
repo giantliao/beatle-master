@@ -73,7 +73,7 @@ func (bc *BtlMasterConf) InitCfg() *BtlMasterConf {
 	bc.RegisterMinerPath = "reg"
 
 	bc.MinersDbPath = "miners.db"
-	bc.LicenseDbPath = "miners.db"
+	bc.LicenseDbPath = "license.db"
 	bc.ReceiptsDbPath = "receipts.db"
 
 	bc.CurrentEthPrice = 420
@@ -102,6 +102,11 @@ func (bc *BtlMasterConf) Load() *BtlMasterConf {
 
 	return bc
 
+}
+
+func (bc *BtlMasterConf) GetDbs() []string {
+	var dbs []string = []string{"license", "miners", "receipts"}
+	return dbs
 }
 
 func newBtlmCfg() *BtlMasterConf {
