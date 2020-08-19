@@ -50,9 +50,8 @@ type BtlMasterConf struct {
 	LicenseDbPath  string `json:"license_db_path"`
 	ReceiptsDbPath string `json:"receipts_db_path"`
 
-	CurrentPrice float64 `json:"-"`
-	LastPrice    float64 `json:"-"`
-	BeatlesPrice float64 `json:"beatles_price"`
+	CurrentEthPrice float64 `json:"current_eth_price"`
+	BeatlesPrice    float64 `json:"beatles_price"`
 
 	BootsTrapDownload []*GithubAccessPoint `json:"boots_trap_download"`
 }
@@ -77,8 +76,7 @@ func (bc *BtlMasterConf) InitCfg() *BtlMasterConf {
 	bc.LicenseDbPath = "miners.db"
 	bc.ReceiptsDbPath = "receipts.db"
 
-	bc.CurrentPrice = 0.01
-	bc.LastPrice = 0.01
+	bc.CurrentEthPrice = 420
 
 	bc.BeatlesPrice = 3.0 //3 dollars
 
