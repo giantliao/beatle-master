@@ -53,13 +53,14 @@ func (pl *PurchaseLicense) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		total, err = wal.CheckReceiptWithNonce(lr.TXSig.Content.EthAddr, lr.EthTransaction, lr.TXSig.Content.Nonce)
 		if err != nil && strings.Contains(err.Error(), "pending") {
 			cnt++
-			if cnt > 20 {
+			if cnt > 2000 {
 				w.WriteHeader(500)
 				log.Println(lr.EthTransaction, err.Error())
 				fmt.Fprintf(w, err.Error())
 				return
 			}
 			time.Sleep(time.Second)
+			fmt.Println("wait for confirm :",lr.EthTransaction.String())
 			continue
 		} else if err != nil {
 			w.WriteHeader(500)
