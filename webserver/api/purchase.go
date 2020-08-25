@@ -9,7 +9,7 @@ import (
 	"github.com/giantliao/beatles-protocol/meta"
 	"github.com/kprc/libeth/account"
 	"github.com/kprc/nbsnetwork/tools"
-	log "github.com/sirupsen/logrus"
+	"log"
 	"net/http"
 	"strings"
 	"sync"
@@ -18,6 +18,19 @@ import (
 
 type PurchaseLicense struct {
 	renewLicenseLock sync.Mutex
+}
+
+func isEqual(f1, f2 float64) bool {
+	d := f1 - f2
+	if d < 0 {
+		d = f2 - f1
+	}
+
+	if d < 0.000001 {
+		return true
+	}
+
+	return false
 }
 
 func (pl *PurchaseLicense) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -60,7 +73,7 @@ func (pl *PurchaseLicense) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 			time.Sleep(time.Second)
-			fmt.Println("wait for confirm :",lr.EthTransaction.String())
+			fmt.Println("wait for confirm :", lr.EthTransaction.String())
 			continue
 		} else if err != nil {
 			w.WriteHeader(500)
@@ -72,7 +85,7 @@ func (pl *PurchaseLicense) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	if total != lr.TXSig.Content.TotalEth {
+	if !isEqual(total, lr.TXSig.Content.TotalEth) {
 		w.WriteHeader(500)
 		errmsg := "eth value not correct"
 		log.Println(lr.EthTransaction, errmsg, total, lr.TXSig.Content.TotalEth)

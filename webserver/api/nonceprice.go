@@ -3,7 +3,6 @@ package api
 import (
 	"fmt"
 	"github.com/giantliao/beatles-master/config"
-
 	"github.com/giantliao/beatles-master/price"
 	"github.com/giantliao/beatles-protocol/licenses"
 	"github.com/giantliao/beatles-protocol/meta"
