@@ -21,7 +21,7 @@ func (cso *CmdStringOPSrv) StringOpDo(cxt context.Context, so *cmdpb.StringOP) (
 	msg := ""
 	switch so.Op {
 	case cmdcommon.CMD_WALLET_SHOW:
-		msg = cso.showWallet(so.Param[0])
+		msg = cso.showWallet()
 	case cmdcommon.CMD_WALLET_LOAD:
 		msg = cso.loadWallet(so.Param[0])
 	case cmdcommon.CMD_WALLET_CREATE:
@@ -50,12 +50,12 @@ func int64time2string(t int64) string {
 	return tm.Format("2006-01-02 15:04:05")
 }
 
-func (cso *CmdStringOPSrv) showWallet(auth string) string {
-	if w, err := wallet.GetWallet(); err != nil {
+func (cso *CmdStringOPSrv) showWallet() string {
+	if _, err := wallet.GetWallet(); err != nil {
 		return err.Error()
 	} else {
 		var s string
-		if s, err = w.String(auth); err != nil {
+		if s, err = wallet.ShowWallet(); err != nil {
 			return err.Error()
 		}
 
