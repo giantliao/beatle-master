@@ -32,16 +32,16 @@ var walletshowCmd = &cobra.Command{
 			log.Println(err)
 			return
 		}
-		var err error
-		if keypassword == "" {
-			if keypassword, err = inputpassword(); err != nil {
-				log.Println(err)
-				return
-			}
-		}
+		//var err error
+		//if keypassword == "" {
+		//	if keypassword, err = inputpassword(); err != nil {
+		//		log.Println(err)
+		//		return
+		//	}
+		//}
 
 		var param []string
-		param = append(param, keypassword)
+		//param = append(param, keypassword)
 
 		cmdclient.StringOpCmdSend("", cmdcommon.CMD_WALLET_SHOW, param)
 	},
