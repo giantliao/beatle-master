@@ -28,7 +28,7 @@ func newMinersStore() *MinersDb {
 
 	db := db.NewFileDb(cfg.GetMinersDbFile()).Load()
 
-	return &MinersDb{NbsDbInter: db}
+	return &MinersDb{NbsDbInter: db,quit: make(chan struct{},1)}
 }
 
 func GetMinersDb() *MinersDb {
@@ -174,7 +174,7 @@ func (mdb *MinersDb) Next(cusor *db.DBCusor) (id account.BeatleAddress, md *Mine
 }
 
 func (mdb *MinersDb)TimeOut() {
-	tic := time.NewTicker(time.Second * 5)
+	tic := time.NewTicker(time.Second * 300)
 	defer tic.Stop()
 
 	for{
