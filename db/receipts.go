@@ -3,6 +3,7 @@ package db
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"github.com/giantliao/beatles-master/config"
 	"github.com/kprc/libeth/account"
 	"github.com/kprc/nbsnetwork/db"
@@ -26,6 +27,17 @@ type ReceiptItem struct {
 	CreateTime   int64                 `json:"create_time"`
 	UpdateTime   int64                 `json:"update_time"`
 }
+
+func (ri *ReceiptItem)String() string  {
+	msg := ""
+	msg += fmt.Sprintf("ReceiptKey: %s\r\n",ri.ReceiptKey)
+	msg += fmt.Sprintf("Cid:%s, FromType:%s, FromAddress:%s\r\n",ri.Cid.String(),ri.FromType,ri.FromAddress)
+	msg += fmt.Sprintf("CurrentPrice: %-8.4f, Month: %d, CreateTime: %s, UpdateTime: %s\r\n",
+		ri.CurrentPrice,ri.Month,tools.Int64Time2String(ri.CreateTime),tools.Int64Time2String(ri.UpdateTime))
+
+	return msg
+}
+
 
 var (
 	receiptsStore     *ReceiptsDb
@@ -61,28 +73,28 @@ func (rd *ReceiptsDb) Insert(receiptKey string, cid account.BeatleAddress, fromT
 		ri.UpdateTime = now
 
 		j, _ := json.Marshal(*ri)
-		rd.NbsDbInter.Insert(receiptKey, string(j))
+		err = rd.NbsDbInter.Insert(receiptKey, string(j))
 
-		return nil
+		return err
 	} else {
 		return errors.New("key is existed, row id is: " + receiptKey)
 	}
 
 }
 
-func (rd *ReceiptsDb) Iterator() {
+func (rd *ReceiptsDb) Iterator() *db.DBCusor{
 	rd.dbLock.Lock()
 	defer rd.dbLock.Unlock()
 
-	rd.cursor = rd.NbsDbInter.DBIterator()
+	return rd.NbsDbInter.DBIterator()
 }
 
-func (rd *ReceiptsDb) Next() (receiptKey string, rdi *ReceiptItem, err error) {
-	if rd.cursor == nil {
+func (rd *ReceiptsDb) Next(cursor *db.DBCusor) (receiptKey string, rdi *ReceiptItem, err error) {
+	if cursor == nil {
 		return "", nil, errors.New("initialize cursor first")
 	}
 	rd.dbLock.Lock()
-	k, v := rd.cursor.Next()
+	k, v := cursor.Next()
 	if k == "" {
 		rd.dbLock.Unlock()
 		return "", nil, errors.New("no receipt in list")
@@ -101,3 +113,30 @@ func (rd *ReceiptsDb) Next() (receiptKey string, rdi *ReceiptItem, err error) {
 	return
 
 }
+
+
+
+func (rd *ReceiptsDb)StringAll() string  {
+	iter := rd.Iterator()
+
+	msg := ""
+
+	for {
+		_, v, err := rd.Next(iter)
+		if err != nil {
+			if msg == "" {
+				msg = "no miners in db"
+			}
+			return msg
+		}
+		if msg != "" {
+			msg += "\r\n"
+		}
+		msg += v.String()
+		msg += "============================================"
+
+	}
+
+	return msg
+}
+

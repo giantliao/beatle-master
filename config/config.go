@@ -32,6 +32,15 @@ func (gap *GithubAccessPoint) String() string {
 	return msg
 }
 
+const (
+	LicenseDBName string = "license"
+	MinersDBName  string = "miners"
+	ReceiptsName  string = "receipts"
+)
+
+
+var masterDBs []string = []string{LicenseDBName, MinersDBName, ReceiptsName}
+
 type BtlMasterConf struct {
 	EthAccessPoint string `json:"eth_access_point"`
 	TrxAccessPoint string `json:"trx_access_point"`
@@ -104,9 +113,10 @@ func (bc *BtlMasterConf) Load() *BtlMasterConf {
 
 }
 
-func (bc *BtlMasterConf) GetDbs() []string {
-	var dbs []string = []string{"license", "miners", "receipts"}
-	return dbs
+
+func GetDbs() []string {
+
+	return masterDBs
 }
 
 func newBtlmCfg() *BtlMasterConf {

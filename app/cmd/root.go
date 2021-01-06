@@ -17,6 +17,7 @@ package cmd
 import (
 	"errors"
 	"fmt"
+	"github.com/giantliao/beatles-master/db"
 	"github.com/giantliao/beatles-master/wallet"
 	"github.com/giantliao/beatles-master/webserver"
 	"github.com/howeyc/gopass"
@@ -94,6 +95,7 @@ var rootCmd = &cobra.Command{
 		}
 
 		go webserver.StartWebDaemon()
+		go db.GetMinersDb().TimeOut()
 
 		cmdservice.GetCmdServerInst().StartCmdService()
 	},

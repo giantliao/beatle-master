@@ -2,8 +2,10 @@ package api
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/btcsuite/btcutil/base58"
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/giantliao/beatles-master/db"
 	"github.com/giantliao/beatles-protocol/licenses"
 	"github.com/giantliao/beatles-protocol/meta"
@@ -51,6 +53,13 @@ func (pl *PurchaseLicense) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if !((&lr.TXSig).ValidSig(wal.BtlAddress().DerivePubKey())) {
 		w.WriteHeader(500)
 		fmt.Fprintf(w, "signature not correct")
+		return
+	}
+
+	if lic,err:=findLicense(lr.EthTransaction,lr.TXSig.Content.Receiver);err==nil{
+		if err = reply(lic,key,w);err!=nil{
+			log.Println("reply license failed",lr.EthTransaction.String())
+		}
 		return
 	}
 
@@ -130,7 +139,7 @@ func (pl *PurchaseLicense) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	l.Signature = base58.Encode(bsig)
 	l.Content = *lc
 
-	err = db.GetLicenseDb().Update(lc.Receiver, lc.Provider, l.Signature, lc.Name, lc.Email, lc.Cell, lc.ExpireTime)
+	err = db.GetLicenseDb().Update(lc.Receiver, lc.Provider, l.Signature, lr.EthTransaction.String(), lc.Name, lc.Email, lc.Cell, lc.ExpireTime)
 	if err != nil {
 		log.Println("receipt :", lr.EthTransaction.String(), " update to db failed")
 		w.WriteHeader(500)
@@ -140,18 +149,47 @@ func (pl *PurchaseLicense) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 	pl.renewLicenseLock.Unlock()
 
-	var content []byte
-	content, err = l.Marshal(key)
-	if err != nil {
+	if err = reply(l,key,w);err!=nil{
 		log.Println("receipt :", lr.EthTransaction.String(), " marshal license failed")
+	}
+
+}
+
+func reply(l *licenses.License, key []byte, w http.ResponseWriter) error  {
+
+	content, err := l.Marshal(key)
+	if err != nil {
 		w.WriteHeader(500)
 		fmt.Fprintf(w, err.Error())
 	}
 
 	mresp := &meta.Meta{}
-	mresp.Marshal(lc.Provider.String(), content)
+	mresp.Marshal(l.Content.Provider.String(), content)
 
 	w.WriteHeader(200)
 	fmt.Fprint(w, mresp.ContentS)
 
+	return nil
+}
+
+func findLicense(tx common.Hash, receiver account.BeatleAddress) (*licenses.License,error)  {
+	ld := db.GetLicenseDb().Find(receiver)
+
+	if tx.String() != ld.LastTx{
+		return nil,errors.New("not found")
+	}
+
+	l:=&licenses.License{}
+
+	c:=&l.Content
+
+	l.Signature = ld.Sig
+	c.Email = ld.Email
+	c.Name = ld.Name
+	c.Cell = ld.Cell
+	c.ExpireTime = ld.ExpireTime
+	c.Provider = ld.ServerId
+	c.Receiver = ld.CID
+
+	return l,nil
 }

@@ -92,27 +92,7 @@ func (cds *CmdDefaultServer) bootstrapPushAll() string {
 }
 
 func (cds *CmdDefaultServer) showMiners() string {
-	mdb := db.GetMinersDb()
-	mdb.Iterator()
-
-	msg := ""
-
-	for {
-		_, v, err := mdb.Next()
-		if err != nil {
-			if msg == "" {
-				msg = "no miners in db"
-			}
-			return msg
-		}
-		if msg != "" {
-			msg += "\r\n"
-		}
-		msg += v.String()
-
-	}
-
-	return msg
+	return db.GetMinersDb().StringAll()
 }
 
 func (cds *CmdDefaultServer) saveMiners() string {

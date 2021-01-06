@@ -41,9 +41,9 @@ func getBestMiners() *miners.BestMiners {
 
 	mdb := db.GetMinersDb()
 
-	mdb.Iterator()
+	iter:=mdb.Iterator()
 	for {
-		id, md, err := mdb.Next()
+		id, md, err := mdb.Next(iter)
 		if err != nil || id == "" {
 			break
 		}

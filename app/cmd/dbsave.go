@@ -1,5 +1,5 @@
 /*
-Copyright © 2020 NAME HERE <EMAIL ADDRESS>
+Copyright © 2021 NAME HERE <EMAIL ADDRESS>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -21,62 +21,54 @@ import (
 	"github.com/giantliao/beatles-master/app/cmdcommon"
 	"github.com/giantliao/beatles-master/config"
 	"github.com/spf13/cobra"
-	"log"
 )
 
-// dbCmd represents the db command
-var dbCmd = &cobra.Command{
-	Use:   "db",
-	Short: "show db",
-	Long:  `show db`,
+// saveCmd represents the save command
+var dbsaveCmd = &cobra.Command{
+	Use:   "save",
+	Short: "save db",
+	Long: `save db`,
 	Run: func(cmd *cobra.Command, args []string) {
 
-		dbs := config.GetDbs()
-
-		if len(args) == 0 {
-			fmt.Println(dbs)
+		if len(args) != 1{
+			fmt.Println("please set a database name")
 			return
 		}
 
-		if _, err := cmdcommon.IsProcessStarted(); err != nil {
-			log.Println(err)
-			return
-		}
+		dbname:=""
+		dbs:=config.GetDbs()
 
-		if len(args) > 1 {
-			fmt.Println("parameter error")
-			return
-		}
-		dbName := ""
-		for i := 0; i < len(dbs); i++ {
-			if dbs[i] == args[0] {
-				dbName = args[0]
-				break
+		for i:=0;i<len(dbs);i++{
+			if args[0] == dbs[i]{
+				dbname = args[0]
 			}
 		}
 
-		if len(dbName) == 0 {
-			fmt.Println("db name not correct")
+		if dbname == ""{
+			fmt.Println("no database name")
 			return
 		}
 
 		var param []string
-		param = append(param, dbName)
+		param = append(param, dbname)
 
-		cmdclient.StringOpCmdSend("", cmdcommon.CMD_DB_SHOW, param)
+		cmdclient.StringOpCmdSend("", cmdcommon.CMD_DB_SAVE, param)
+
+
+
 	},
 }
 
 func init() {
-	rootCmd.AddCommand(dbCmd)
+	dbCmd.AddCommand(dbsaveCmd)
 
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
-	// dbCmd.PersistentFlags().String("foo", "", "A help for foo")
+	// saveCmd.PersistentFlags().String("foo", "", "A help for foo")
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
-	// dbCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	// saveCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

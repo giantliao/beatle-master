@@ -24,9 +24,9 @@ func CollectBootsTrapList(count int) *miners.BootsTrapMiners {
 	btms := &miners.BootsTrapMiners{}
 	cnt := 0
 
-	mdb.Iterator()
+	iter:=mdb.Iterator()
 	for {
-		k, v, err := mdb.Next()
+		k, v, err := mdb.Next(iter)
 		if k == "" || err != nil {
 			break
 		}

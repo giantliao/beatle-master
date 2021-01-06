@@ -9,12 +9,13 @@ import (
 	"github.com/kprc/nbsnetwork/db"
 	"github.com/kprc/nbsnetwork/tools"
 	"sync"
+	"time"
 )
 
 type MinersDb struct {
 	db.NbsDbInter
 	dbLock sync.Mutex
-	cursor *db.DBCusor
+	quit chan struct{}
 }
 
 var (
@@ -143,19 +144,19 @@ func (mdb *MinersDb) Save() {
 	mdb.NbsDbInter.Save()
 }
 
-func (mdb *MinersDb) Iterator() {
+func (mdb *MinersDb) Iterator() *db.DBCusor {
 	mdb.dbLock.Lock()
 	defer mdb.dbLock.Unlock()
 
-	mdb.cursor = mdb.NbsDbInter.DBIterator()
+	return mdb.NbsDbInter.DBIterator()
 }
 
-func (mdb *MinersDb) Next() (id account.BeatleAddress, md *MinerDesc, err error) {
-	if mdb.cursor == nil {
+func (mdb *MinersDb) Next(cusor *db.DBCusor) (id account.BeatleAddress, md *MinerDesc, err error) {
+	if cusor == nil {
 		return account.BeatleAddress(""), nil, errors.New("initialize cursor first")
 	}
 	mdb.dbLock.Lock()
-	k, v := mdb.cursor.Next()
+	k, v := cusor.Next()
 	if k == "" {
 		mdb.dbLock.Unlock()
 		return "", nil, errors.New("no miner in list")
@@ -170,4 +171,69 @@ func (mdb *MinersDb) Next() (id account.BeatleAddress, md *MinerDesc, err error)
 	md.ID = id
 
 	return
+}
+
+func (mdb *MinersDb)TimeOut() {
+	tic := time.NewTicker(time.Second * 5)
+	defer tic.Stop()
+
+	for{
+		select {
+		case <-tic.C:
+			mdb.doTimeOUt()
+		case <-mdb.quit:
+			return
+		}
+
+	}
+}
+
+func (mdb *MinersDb)doTimeOUt()  {
+	iter:=mdb.Iterator()
+
+	var dKeys []account.BeatleAddress
+
+	now:=tools.GetNowMsTime()
+
+	for{
+		id,md,err:=mdb.Next(iter)
+		if err!=nil{
+			break
+		}
+		if now - md.UpdateTime > 1800000{
+			dKeys = append(dKeys,id)
+		}
+	}
+
+	for i:=0;i<len(dKeys);i++{
+		mdb.Delete(dKeys[i])
+	}
+
+}
+
+func (mdb *MinersDb)Close()  {
+	close(mdb.quit)
+}
+
+func (mdb *MinersDb)StringAll() string  {
+	iter := mdb.Iterator()
+
+	msg := ""
+
+	for {
+		_, v, err := mdb.Next(iter)
+		if err != nil {
+			if msg == "" {
+				msg = "no miners in db"
+			}
+			return msg
+		}
+		if msg != "" {
+			msg += "\r\n"
+		}
+		msg += v.String()
+
+	}
+
+	return msg
 }

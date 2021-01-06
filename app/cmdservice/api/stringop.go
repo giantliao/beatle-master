@@ -38,6 +38,8 @@ func (cso *CmdStringOPSrv) StringOpDo(cxt context.Context, so *cmdpb.StringOP) (
 		msg = cso.removeMiner(so.Param[0])
 	case cmdcommon.CMD_DB_SHOW:
 		msg = cso.dbShow(so.Param[0])
+	case cmdcommon.CMD_DB_SAVE:
+		msg = cso.dbSave(so.Param[0])
 	default:
 		return encapResp("Command Not Found"), nil
 	}
@@ -149,6 +151,29 @@ func (cso *CmdStringOPSrv) removeMiner(id string) string {
 
 }
 
-func (cso *CmdStringOPSrv) dbShow(db string) string {
-	return "to implement"
+func (cso *CmdStringOPSrv) dbShow(dbname string) string {
+	if dbname == config.MinersDBName{
+		return db.GetMinersDb().StringAll()
+	}else if dbname == config.LicenseDBName{
+		return db.GetLicenseDb().StringAll()
+	}else if dbname == config.ReceiptsName{
+		return db.GetReceiptsDb().StringAll()
+	}else{
+		return "no "+ dbname +" !"
+	}
+
+
+}
+func (cso *CmdStringOPSrv) dbSave(dbname string) string {
+	if dbname == config.MinersDBName{
+		db.GetMinersDb().Save()
+	}else if dbname == config.LicenseDBName{
+		db.GetLicenseDb().Save()
+	}else if dbname == config.ReceiptsName{
+		db.GetReceiptsDb().Save()
+	}else{
+		return "no "+ dbname +" !"
+	}
+
+	return "save " + dbname +" success"
 }

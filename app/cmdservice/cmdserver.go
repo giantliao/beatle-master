@@ -1,6 +1,7 @@
 package cmdservice
 
 import (
+	"github.com/giantliao/beatles-master/db"
 	"github.com/giantliao/beatles-master/webserver"
 	"google.golang.org/grpc"
 	"sync"
@@ -101,7 +102,9 @@ func stop() {
 		return
 	}
 
+	db.GetMinersDb().Close()
 	webserver.StopWebDaemon()
+
 
 	GetCmdServerInst().StopCmdService()
 

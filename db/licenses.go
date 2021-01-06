@@ -3,6 +3,7 @@ package db
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"github.com/giantliao/beatles-master/config"
 	"github.com/kprc/libeth/account"
 	"github.com/kprc/nbsnetwork/db"
@@ -18,6 +19,7 @@ type LicenseDb struct {
 
 type LicenseDesc struct {
 	Sig        string                `json:"sig"`
+	LastTx     string                `json:"last_tx"`
 	ServerId   account.BeatleAddress `json:"server_id"`
 	CID        account.BeatleAddress `json:"-"`
 	Name       string                `json:"name"`
@@ -27,6 +29,21 @@ type LicenseDesc struct {
 	CreateTime int64                 `json:"create_time"`
 	UpdateTime int64                 `json:"update_time"`
 }
+
+func (ld *LicenseDesc)String() string  {
+	msg:=""
+	msg += fmt.Sprintf("ServerId: %s  , CID: %s\r\n",ld.ServerId.String(),ld.CID.String())
+	msg += fmt.Sprintf("Sig : %s\r\n",ld.Sig)
+	msg += fmt.Sprintf("LastTx : %s\r\n",ld.LastTx)
+	msg += fmt.Sprintf("Name:%s, Email:%s, Cell:%s\r\n",ld.Name,ld.Email,ld.Cell)
+	msg += fmt.Sprintf("ExpireTime: %s, CreateTime:%s,  UpdateTime:%s\r\n",
+		tools.Int64Time2String(ld.ExpireTime),
+		tools.Int64Time2String(ld.CreateTime),
+		tools.Int64Time2String(ld.UpdateTime))
+
+	return msg
+}
+
 
 var (
 	licenseStore     *LicenseDb
@@ -53,14 +70,14 @@ func GetLicenseDb() *LicenseDb {
 	return licenseStore
 }
 
-func (ld *LicenseDb) Insert(cid, serverId account.BeatleAddress, sig, name, email, cell string, expireTime int64) error {
+func (ld *LicenseDb) Insert(cid, serverId account.BeatleAddress, sig, lastTx, name, email, cell string, expireTime int64) error {
 	ld.dbLock.Lock()
 	defer ld.dbLock.Unlock()
 
 	now := tools.GetNowMsTime()
 
 	if _, err := ld.NbsDbInter.Find(cid.String()); err != nil {
-		lDesc := &LicenseDesc{Sig: sig, Name: name, Email: email, Cell: cell, ServerId: serverId, ExpireTime: expireTime}
+		lDesc := &LicenseDesc{Sig: sig, LastTx: lastTx, Name: name, Email: email, Cell: cell, ServerId: serverId, ExpireTime: expireTime}
 		//lDesc.ExpireTime = tools.Moth2Expire(0, month)
 		lDesc.CreateTime = now
 		lDesc.UpdateTime = now
@@ -74,14 +91,14 @@ func (ld *LicenseDb) Insert(cid, serverId account.BeatleAddress, sig, name, emai
 	}
 }
 
-func (ld *LicenseDb) Update(cid, serverId account.BeatleAddress, sig, name, email, cell string, expireTime int64) error {
+func (ld *LicenseDb) Update(cid, serverId account.BeatleAddress, sig, lastTx, name, email, cell string, expireTime int64) error {
 	ld.dbLock.Lock()
 	defer ld.dbLock.Unlock()
 
 	now := tools.GetNowMsTime()
 
 	if lDescStr, err := ld.NbsDbInter.Find(cid.String()); err != nil {
-		lDesc := &LicenseDesc{Sig: sig, Name: name, Email: email, Cell: cell, ServerId: serverId, ExpireTime: expireTime}
+		lDesc := &LicenseDesc{Sig: sig, LastTx: lastTx, Name: name, Email: email, Cell: cell, ServerId: serverId, ExpireTime: expireTime}
 		//lDesc.ExpireTime = tools.Moth2Expire(0, month)
 		lDesc.CreateTime = now
 		lDesc.UpdateTime = now
@@ -140,19 +157,19 @@ func (ld *LicenseDb) Save() {
 	ld.NbsDbInter.Save()
 }
 
-func (ld *LicenseDb) Iterator() {
+func (ld *LicenseDb) Iterator() *db.DBCusor{
 	ld.dbLock.Lock()
 	defer ld.dbLock.Unlock()
 
-	ld.cursor = ld.NbsDbInter.DBIterator()
+	return ld.NbsDbInter.DBIterator()
 }
 
-func (ld *LicenseDb) Next() (cid account.BeatleAddress, lDesc *LicenseDesc, err error) {
-	if ld.cursor == nil {
+func (ld *LicenseDb) Next(cursor *db.DBCusor) (cid account.BeatleAddress, lDesc *LicenseDesc, err error) {
+	if cursor == nil {
 		return "", nil, errors.New("initialize cursor first")
 	}
 	ld.dbLock.Lock()
-	k, v := ld.cursor.Next()
+	k, v := cursor.Next()
 	if k == "" {
 		ld.dbLock.Unlock()
 		return "", nil, errors.New("no license in list")
@@ -168,4 +185,30 @@ func (ld *LicenseDb) Next() (cid account.BeatleAddress, lDesc *LicenseDesc, err 
 	lDesc.CID = cid
 
 	return
+}
+
+
+
+func (ld *LicenseDb)StringAll() string  {
+	iter := ld.Iterator()
+
+	msg := ""
+
+	for {
+		_, v, err := ld.Next(iter)
+		if err != nil {
+			if msg == "" {
+				msg = "no miners in db"
+			}
+			return msg
+		}
+		if msg != "" {
+			msg += "\r\n"
+		}
+		msg += v.String()
+		msg += "============================================"
+
+	}
+
+	return msg
 }

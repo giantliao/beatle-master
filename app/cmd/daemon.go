@@ -15,6 +15,7 @@
 package cmd
 
 import (
+	"github.com/giantliao/beatles-master/db"
 	"github.com/giantliao/beatles-master/webserver"
 	"github.com/sevlyar/go-daemon"
 	"github.com/spf13/cobra"
@@ -65,6 +66,7 @@ var daemonCmd = &cobra.Command{
 		defer cntxt.Release()
 
 		go webserver.StartWebDaemon()
+		go db.GetMinersDb().TimeOut()
 
 		cmdservice.GetCmdServerInst().StartCmdService()
 	},
