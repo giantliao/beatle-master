@@ -16,7 +16,9 @@ package cmd
 
 import (
 	"github.com/giantliao/beatles-master/db"
+	"github.com/giantliao/beatles-master/wallet"
 	"github.com/giantliao/beatles-master/webserver"
+	"github.com/kprc/nbsnetwork/tools/processChan"
 	"github.com/sevlyar/go-daemon"
 	"github.com/spf13/cobra"
 	"log"
@@ -60,10 +62,25 @@ var daemonCmd = &cobra.Command{
 			log.Fatal("Unable to run: ", err)
 		}
 		if d != nil {
+			if keypassword == "" {
+				if keypassword, err = inputpassword(); err != nil {
+					log.Println(err)
+					return
+				}
+			}
+
+			processChan.SendPasswd(daemondir,keypassword)
 			log.Println("beatles master starting, please check log at:", path.Join(daemondir, "beatlesm.log"))
 			return
 		}
 		defer cntxt.Release()
+
+		passwd:=processChan.ReceivePasswd(daemondir)
+
+		err = wallet.LoadWallet(passwd)
+		if err != nil {
+			panic("load wallet failed")
+		}
 
 		go webserver.StartWebDaemon()
 		go db.GetMinersDb().TimeOut()
