@@ -44,6 +44,7 @@ var masterDBs []string = []string{LicenseDBName, MinersDBName, ReceiptsName}
 type BtlMasterConf struct {
 	EthAccessPoint string `json:"eth_access_point"`
 	TrxAccessPoint string `json:"trx_access_point"`
+	BTLCoinAddr    string `json:"btl_coin_addr"`
 
 	CmdListenPort  string `json:"cmdlistenport"`
 	HttpServerPort int    `json:"http_server_port"`
@@ -61,6 +62,7 @@ type BtlMasterConf struct {
 
 	CurrentEthPrice float64 `json:"current_eth_price"`
 	BeatlesPrice    float64 `json:"beatles_price"`
+	BTLCoinPrice    float64 `json:"btl_coin_price"`
 
 	BootsTrapDownload []*GithubAccessPoint `json:"boots_trap_download"`
 }
@@ -85,9 +87,12 @@ func (bc *BtlMasterConf) InitCfg() *BtlMasterConf {
 	bc.LicenseDbPath = "license.db"
 	bc.ReceiptsDbPath = "receipts.db"
 
+	bc.BTLCoinAddr = "0xce9d2550df971f7cc032cd6c4afc1302a92db95a"
+
 	bc.CurrentEthPrice = 420
 
 	bc.BeatlesPrice = 3.0 //3 dollars
+	bc.BTLCoinPrice = 20.0 //20 BTLC
 
 	return bc
 }

@@ -34,20 +34,20 @@ rpcservice := app/cmdpb
 #dhtrpc := dht/pb
 #assetdir := ui/asset
 #wifiapdir := wifiap/control
-keydir := ../go-bas/key
-resdir := config
+abidir := abires
+resdir := contract
 
 proto:
 	protoc -I=$(rpcservice)  --go_out=plugins=grpc:${rpcservice}   ${rpcservice}/*.proto
 #	protoc -I=$(dhtrpc)  --go_out=plugins=grpc:${dhtrpc}   ${dhtrpc}/*.proto
 
 staticfile2bin:
-	go-bindata -o $(resdir)/keyres.go -pkg=config $(keydir)/...
+	go-bindata -o $(abidir)/abires.go -pkg=abires $(resdir)/ERC20.sol
 #	go-bindata -o $(wifiapdir)/res.go -pkg=control wifiap/staticfile/...
 
 #$(TARGET): staticfile2bin proto $(SRC)
 #	@go build $(LDFLAGS) -o $(TARGET)
-$(TARGET): proto $(SRC)
+$(TARGET): staticfile2bin proto $(SRC)
 	@go build $(LDFLAGS) -o $(TARGET)
 
 build: $(TARGET)

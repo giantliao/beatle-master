@@ -50,6 +50,9 @@ func CollectBootsTrapList(count int) *miners.BootsTrapMiners {
 
 	btms.EthAccPoint = cfg.EthAccessPoint
 	btms.TrxAccPoint = cfg.TrxAccessPoint
+	btms.BTLCoinAddr = cfg.BTLCoinAddr
+	btms.BTLCPrice = cfg.BTLCoinPrice
+
 
 	for i := 0; i < len(cfg.BootsTrapDownload); i++ {
 		btms.NextDownloadPoint = append(btms.NextDownloadPoint, cfg.BootsTrapDownload[i].DownloadPoint)
