@@ -42,7 +42,7 @@ proto:
 #	protoc -I=$(dhtrpc)  --go_out=plugins=grpc:${dhtrpc}   ${dhtrpc}/*.proto
 
 staticfile2bin:
-	go-bindata -o $(abidir)/abires.go -pkg=abires $(resdir)/ERC20.sol
+	go-bindata -o $(abidir)/abires.go -pkg=abires $(resdir)/ERC20.abi
 #	go-bindata -o $(wifiapdir)/res.go -pkg=control wifiap/staticfile/...
 
 #$(TARGET): staticfile2bin proto $(SRC)
