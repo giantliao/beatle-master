@@ -125,7 +125,7 @@ func (bcw *BTLCoinToken)CheckHashAndGet(hash common.Hash,nonce uint64,cnt int) (
 				roundCheck++
 				continue
 			}else{
-				return coin,fromAddr,toAddr,errors.New("pending...")
+				return coin,fromAddr,toAddr,errors.New("pending, waiting")
 			}
 		}
 
@@ -185,7 +185,7 @@ func decodeMethod(payload []byte) (float64,common.Address,error)  {
 	params:=make(map[string]interface{})
 	method.Inputs.UnpackIntoMap(params,payload[4:])
 
-	for k,_:=range params{
+	for k :=range params{
 		fmt.Println("key is :",k)
 	}
 	toAddr := common.Address{}
