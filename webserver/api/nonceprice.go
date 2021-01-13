@@ -28,21 +28,15 @@ func (nps *NoncePriceSrv) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//price.GetEthPrice()
-	npsig := &licenses.NoncePriceSig{}
-	npc := &npsig.Content
+	var npsig *licenses.NoncePriceSig
 
-	npc.Nonce = np.Nonce
-	npc.Receiver = np.Receiver
-	npc.EthAddr = np.EthAddr
-	npc.PricePerMonth = config.GetCBtlm().BeatlesPrice
-	npc.Month = np.Month
-	npc.Total = npc.PricePerMonth * float64(npc.Month)
-	npc.EthPrice = price.GetEthPrice()
-	if npc.EthPrice == 0 {
-		npc.EthPrice = 200
+	//price.GetEthPrice()
+	if np.PayTyp == licenses.PayTypETH{
+		npsig = ethNoncePrice(np)
+	}else if np.PayTyp == licenses.PayTypBTLC{
+		npsig = btlcNoncePrice(np)
 	}
-	npc.TotalEth = npc.Total / npc.EthPrice
+
 
 	npsig.Sign(func(data []byte) []byte {
 		return wat.BtlSign(data)
@@ -62,4 +56,39 @@ func (nps *NoncePriceSrv) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(200)
 	fmt.Fprintf(w, resp.ContentS)
+}
+
+func ethNoncePrice(np *licenses.NoncePrice) *licenses.NoncePriceSig{
+	npsig := &licenses.NoncePriceSig{}
+	npc := &npsig.Content
+
+	npc.Nonce = np.Nonce
+	npc.Receiver = np.Receiver
+	npc.Payer = np.Payer
+	npc.PricePerMonth = config.GetCBtlm().BeatlesPrice
+	npc.Month = np.Month
+	npc.Total = npc.PricePerMonth * float64(npc.Month)
+	npc.MarketPrice = price.GetEthPrice()
+	if npc.MarketPrice == 0 {
+		npc.MarketPrice = 200
+	}
+	npc.TotalPrice = npc.Total / npc.MarketPrice
+
+	return npsig
+}
+
+func btlcNoncePrice(np *licenses.NoncePrice) *licenses.NoncePriceSig{
+	npsig := &licenses.NoncePriceSig{}
+	npc := &npsig.Content
+
+	npc.Nonce = np.Nonce
+	npc.Receiver = np.Receiver
+	npc.Payer = np.Payer
+	npc.PricePerMonth = config.GetCBtlm().BTLCoinPrice
+	npc.Month = np.Month
+	npc.Total = npc.PricePerMonth * float64(npc.Month)
+	npc.MarketPrice = 1.0
+	npc.TotalPrice = npc.Total / npc.MarketPrice
+
+	return npsig
 }

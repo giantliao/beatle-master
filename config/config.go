@@ -44,6 +44,7 @@ var masterDBs []string = []string{LicenseDBName, MinersDBName, ReceiptsName}
 type BtlMasterConf struct {
 	EthAccessPoint string `json:"eth_access_point"`
 	TrxAccessPoint string `json:"trx_access_point"`
+	BTLCAccessPoint string `json:"btlc_access_point"`
 	BTLCoinAddr    string `json:"btl_coin_addr"`
 
 	CmdListenPort  string `json:"cmdlistenport"`
@@ -55,6 +56,7 @@ type BtlMasterConf struct {
 	PurchasePath      string `json:"purchase_path"`
 	ListMinerPath     string `json:"list_miner_path"`
 	RegisterMinerPath string `json:"register_miner_path"`
+	FreshLicensePath  string `json:"fresh_license_path"`
 
 	MinersDbPath   string `json:"miners_db_path"`
 	LicenseDbPath  string `json:"license_db_path"`
@@ -82,6 +84,7 @@ func (bc *BtlMasterConf) InitCfg() *BtlMasterConf {
 	bc.PurchasePath = "purchase"
 	bc.ListMinerPath = "list"
 	bc.RegisterMinerPath = "reg"
+	bc.FreshLicensePath = "freshlic"
 
 	bc.MinersDbPath = "miners.db"
 	bc.LicenseDbPath = "license.db"
@@ -92,7 +95,7 @@ func (bc *BtlMasterConf) InitCfg() *BtlMasterConf {
 	bc.CurrentEthPrice = 420
 
 	bc.BeatlesPrice = 3.0 //3 dollars
-	bc.BTLCoinPrice = 20.0 //20 BTLC
+	bc.BTLCoinPrice = 30.0 //30 BTLC
 
 	return bc
 }
@@ -268,6 +271,11 @@ func (bc *BtlMasterConf) GetpurchaseWebPath() string {
 func (bc *BtlMasterConf) GetListMinersWebPath() string {
 	return "/" + bc.ApiPath + "/" + bc.ListMinerPath
 }
+
+func (bc *BtlMasterConf) GetFreshLicensePath() string {
+	return "/"+bc.ApiPath +"/"+bc.FreshLicensePath
+}
+
 
 func (bc *BtlMasterConf) GetRegisterMinerWebPath() string {
 	return "/" + bc.ApiPath + "/" + bc.RegisterMinerPath

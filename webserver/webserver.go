@@ -22,6 +22,7 @@ func StartWebDaemon() {
 	mux.Handle(cfg.GetPriceWebPath(), &api.NoncePriceSrv{})
 	mux.Handle(cfg.GetpurchaseWebPath(), &api.PurchaseLicense{})
 	mux.Handle(cfg.GetListMinersWebPath(), &api.ListMiners{})
+	mux.Handle(cfg.GetFreshLicensePath(), &api.FreshLicenseSrv{})
 
 	addr := ":" + strconv.Itoa(config.GetCBtlm().HttpServerPort)
 

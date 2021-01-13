@@ -16,6 +16,7 @@ limitations under the License.
 package cmd
 
 import (
+	"fmt"
 	"github.com/giantliao/beatles-master/app/cmdcommon"
 	"github.com/giantliao/beatles-master/config"
 
@@ -26,6 +27,8 @@ import (
 var (
 	remotetrxaccesspoint string
 	remoteethaccesspoint string
+	remotebtlcaccesspoint string
+	btlccontractaddr string
 )
 
 var initCmd = &cobra.Command{
@@ -42,6 +45,11 @@ var initCmd = &cobra.Command{
 		}
 
 		InitCfg()
+
+		if remoteethaccesspoint == "" || remotebtlcaccesspoint == "" || btlccontractaddr == ""{
+			fmt.Println("eth access point and btlc access point must set")
+			return
+		}
 
 		cfg := config.GetCBtlm()
 
@@ -60,6 +68,8 @@ func init() {
 	// initCmd.PersistentFlags().String("foo", "", "A help for foo")
 	initCmd.Flags().StringVarP(&remoteethaccesspoint, "eth", "e", "", "eth access point")
 	initCmd.Flags().StringVarP(&remotetrxaccesspoint, "trx", "t", "", "tron network access point")
+	initCmd.Flags().StringVarP(&remotebtlcaccesspoint,"btlc","c","","btlc access point")
+	initCmd.Flags().StringVarP(&btlccontractaddr,"baddr","b","","btlc contract address")
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// initCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
