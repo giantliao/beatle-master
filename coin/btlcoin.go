@@ -146,7 +146,7 @@ func (bcw *BTLCoinToken)CheckHashAndGet(hash common.Hash,nonce uint64,cnt int) (
 			return 0, common.Address{}, common.Address{}, err
 		}
 		fromAddr = msg.From()
-		toAddr = *tx.To()
+		//toAddr = *tx.To()
 
 		log.Printf("GetSuccess: coin:%-10.4f fromaddr:%s, toaddr:%s ",coin,fromAddr.String(),toAddr.String())
 
