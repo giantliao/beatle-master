@@ -96,7 +96,7 @@ func (bcw *BTLCoinToken)BtlCoinTransfer(toAddr common.Address, tokenNum float64,
 	return tx.Hash().String(),nil
 }
 
-func (bcw *BTLCoinToken)CheckHashAndGet(hash common.Hash,nonce uint64,cnt int) (coin float64, fromAddr, toAddr common.Address,err error) {
+func (bcw *BTLCoinToken)CheckHashAndGet(hash common.Hash,cnt int) (coin float64, fromAddr, toAddr common.Address,err error) {
 	var ec *ethclient.Client
 	ec, err = ethclient.Dial(bcw.ethAccessPoint)
 	if err != nil {
@@ -126,10 +126,6 @@ func (bcw *BTLCoinToken)CheckHashAndGet(hash common.Hash,nonce uint64,cnt int) (
 			}else{
 				return coin,fromAddr,toAddr,errors.New("pending, waiting")
 			}
-		}
-
-		if nonce != tx.Nonce(){
-			return coin,fromAddr,toAddr,errors.New("not a correct nonce")
 		}
 
 		coin,toAddr,err = decodeMethod(tx.Data())

@@ -81,7 +81,7 @@ func (pl *PurchaseLicense) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}else{
 		var fromaddr common.Address
 		var toaddr common.Address
-		total,fromaddr,toaddr,err = coin.GetBTLCoinToken().CheckHashAndGet(common.HexToHash(lr.TxStr),lr.TXSig.Content.Nonce,2000)
+		total,fromaddr,toaddr,err = coin.GetBTLCoinToken().CheckHashAndGet(common.HexToHash(lr.TxStr),2000)
 		if err != nil{
 			w.WriteHeader(500)
 			log.Println(lr.TxStr, err.Error())
