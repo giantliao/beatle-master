@@ -6,6 +6,7 @@ import (
 	"github.com/giantliao/beatles-protocol/licenses"
 	"github.com/giantliao/beatles-protocol/meta"
 	"github.com/kprc/libeth/account"
+	"log"
 	"net/http"
 )
 
@@ -26,17 +27,20 @@ func (fls *FreshLicenseSrv)ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		w.WriteHeader(500)
 		fmt.Fprintf(w, err.Error())
+		log.Println("unmarshal fresh license request failed")
 		return
 	}
 
 	if sender != req.Receiver.String(){
 		w.WriteHeader(500)
-		fmt.Fprintf(w, err.Error())
+		fmt.Fprintf(w, "receiver not correct")
+		log.Println("receiver sender not correct",sender,req.Receiver.String())
 		return
 	}
 
 	flr:=getLicenseFromDB(req.Receiver)
 	if flr == nil{
+		log.Println("not find license from db",req.Receiver)
 		w.WriteHeader(500)
 		fmt.Fprintf(w, err.Error())
 	}
@@ -45,6 +49,7 @@ func (fls *FreshLicenseSrv)ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		w.WriteHeader(500)
 		fmt.Fprintf(w, err.Error())
+		log.Println("marshal error",flr.Content.Receiver)
 		return
 	}
 
