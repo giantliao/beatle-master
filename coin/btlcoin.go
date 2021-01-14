@@ -8,9 +8,6 @@ import (
 	"errors"
 	"fmt"
 	"github.com/ethereum/go-ethereum/accounts/abi"
-	"log"
-	"time"
-
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
@@ -19,8 +16,10 @@ import (
 	"github.com/giantliao/beatles-master/config"
 	"github.com/giantliao/beatles-master/contract"
 	"github.com/kprc/libeth/wallet"
+	"log"
 	"strings"
 	"sync"
+	"time"
 
 	"math/big"
 )
@@ -149,11 +148,12 @@ func (bcw *BTLCoinToken)CheckHashAndGet(hash common.Hash,nonce uint64,cnt int) (
 		fromAddr = msg.From()
 		toAddr = *tx.To()
 
-		log.Printf("GetSuccess: coin:%-10.4f fromaddr:%s, toaddr:%s ",coin,fromAddr,toAddr)
+		log.Printf("GetSuccess: coin:%-10.4f fromaddr:%s, toaddr:%s ",coin,fromAddr.String(),toAddr.String())
 
 		return
 
 	}
+
 }
 
 var gERC20ABI *abi.ABI
@@ -200,27 +200,5 @@ func decodeMethod(payload []byte) (float64,common.Address,error)  {
 	}
 
 	return paramv,toAddr,nil
-}
 
-//func TransferERCToken(target string, tokenNo float64, key *ecdsa.PrivateKey) (string, error) {
-//
-//	t, err := config.SysEthConfig.NewTokenClient()
-//	if err != nil {
-//		fmt.Println("[TransferERCToken]: tokenConn err:", err.Error())
-//		return "", err
-//	}
-//	defer t.Close()
-//
-//	opts := bind.NewKeyedTransactor(key)
-//	val := util.BalanceEth(tokenNo)
-//
-//	fmt.Printf("\n----->%.2f", util.BalanceHuman(val))
-//
-//	tx, err := t.Transfer(opts, common.HexToAddress(target), val)
-//	if err != nil {
-//		fmt.Println("[TransferERCToken]: Transfer err:", err.Error())
-//		return "", err
-//	}
-//
-//	return tx.Hash().Hex(), nil
-//}
+}
