@@ -120,6 +120,7 @@ func (ld *LicenseDb) Update(cid, serverId account.BeatleAddress, sig, lastTx, na
 		lDesc.Name = name
 		lDesc.Email = email
 		lDesc.Cell = cell
+		lDesc.LastTx = lastTx
 		//lDesc.ExpireTime = tools.Moth2Expire(lDesc.ExpireTime, month)
 		lDesc.ExpireTime = expireTime
 		lDesc.UpdateTime = now
