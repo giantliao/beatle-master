@@ -152,28 +152,27 @@ func (cso *CmdStringOPSrv) removeMiner(id string) string {
 }
 
 func (cso *CmdStringOPSrv) dbShow(dbname string) string {
-	if dbname == config.MinersDBName{
+	if dbname == config.MinersDBName {
 		return db.GetMinersDb().StringAll()
-	}else if dbname == config.LicenseDBName{
+	} else if dbname == config.LicenseDBName {
 		return db.GetLicenseDb().StringAll()
-	}else if dbname == config.ReceiptsName{
+	} else if dbname == config.ReceiptsName {
 		return db.GetReceiptsDb().StringAll()
-	}else{
-		return "no "+ dbname +" !"
+	} else {
+		return "no " + dbname + " !"
 	}
-
 
 }
 func (cso *CmdStringOPSrv) dbSave(dbname string) string {
-	if dbname == config.MinersDBName{
+	if dbname == config.MinersDBName {
 		db.GetMinersDb().Save()
-	}else if dbname == config.LicenseDBName{
+	} else if dbname == config.LicenseDBName {
 		db.GetLicenseDb().Save()
-	}else if dbname == config.ReceiptsName{
+	} else if dbname == config.ReceiptsName {
 		db.GetReceiptsDb().Save()
-	}else{
-		return "no "+ dbname +" !"
+	} else {
+		return "no " + dbname + " !"
 	}
 
-	return "save " + dbname +" success"
+	return "save " + dbname + " success"
 }

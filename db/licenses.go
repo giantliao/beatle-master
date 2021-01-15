@@ -30,12 +30,12 @@ type LicenseDesc struct {
 	UpdateTime int64                 `json:"update_time"`
 }
 
-func (ld *LicenseDesc)String() string  {
-	msg:=""
-	msg += fmt.Sprintf("ServerId: %s  , CID: %s\r\n",ld.ServerId.String(),ld.CID.String())
-	msg += fmt.Sprintf("Sig : %s\r\n",ld.Sig)
-	msg += fmt.Sprintf("LastTx : %s\r\n",ld.LastTx)
-	msg += fmt.Sprintf("Name:%s, Email:%s, Cell:%s\r\n",ld.Name,ld.Email,ld.Cell)
+func (ld *LicenseDesc) String() string {
+	msg := ""
+	msg += fmt.Sprintf("ServerId: %s  , CID: %s\r\n", ld.ServerId.String(), ld.CID.String())
+	msg += fmt.Sprintf("Sig : %s\r\n", ld.Sig)
+	msg += fmt.Sprintf("LastTx : %s\r\n", ld.LastTx)
+	msg += fmt.Sprintf("Name:%s, Email:%s, Cell:%s\r\n", ld.Name, ld.Email, ld.Cell)
 	msg += fmt.Sprintf("ExpireTime: %s, CreateTime:%s,  UpdateTime:%s\r\n",
 		tools.Int64Time2String(ld.ExpireTime),
 		tools.Int64Time2String(ld.CreateTime),
@@ -43,7 +43,6 @@ func (ld *LicenseDesc)String() string  {
 
 	return msg
 }
-
 
 var (
 	licenseStore     *LicenseDb
@@ -159,7 +158,7 @@ func (ld *LicenseDb) Save() {
 	ld.NbsDbInter.Save()
 }
 
-func (ld *LicenseDb) Iterator() *db.DBCusor{
+func (ld *LicenseDb) Iterator() *db.DBCusor {
 	ld.dbLock.Lock()
 	defer ld.dbLock.Unlock()
 
@@ -189,9 +188,7 @@ func (ld *LicenseDb) Next(cursor *db.DBCusor) (cid account.BeatleAddress, lDesc 
 	return
 }
 
-
-
-func (ld *LicenseDb)StringAll() string  {
+func (ld *LicenseDb) StringAll() string {
 	iter := ld.Iterator()
 
 	msg := ""

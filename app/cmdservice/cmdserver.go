@@ -105,7 +105,6 @@ func stop() {
 	db.GetMinersDb().Close()
 	webserver.StopWebDaemon()
 
-
 	GetCmdServerInst().StopCmdService()
 
 }

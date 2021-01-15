@@ -38,14 +38,13 @@ const (
 	ReceiptsName  string = "receipts"
 )
 
-
 var masterDBs []string = []string{LicenseDBName, MinersDBName, ReceiptsName}
 
 type BtlMasterConf struct {
-	EthAccessPoint string `json:"eth_access_point"`
-	TrxAccessPoint string `json:"trx_access_point"`
+	EthAccessPoint  string `json:"eth_access_point"`
+	TrxAccessPoint  string `json:"trx_access_point"`
 	BTLCAccessPoint string `json:"btlc_access_point"`
-	BTLCoinAddr    string `json:"btl_coin_addr"`
+	BTLCoinAddr     string `json:"btl_coin_addr"`
 
 	CmdListenPort  string `json:"cmdlistenport"`
 	HttpServerPort int    `json:"http_server_port"`
@@ -94,7 +93,7 @@ func (bc *BtlMasterConf) InitCfg() *BtlMasterConf {
 
 	bc.CurrentEthPrice = 420
 
-	bc.BeatlesPrice = 3.0 //3 dollars
+	bc.BeatlesPrice = 3.0  //3 dollars
 	bc.BTLCoinPrice = 30.0 //30 BTLC
 
 	return bc
@@ -120,7 +119,6 @@ func (bc *BtlMasterConf) Load() *BtlMasterConf {
 	return bc
 
 }
-
 
 func GetDbs() []string {
 
@@ -273,9 +271,8 @@ func (bc *BtlMasterConf) GetListMinersWebPath() string {
 }
 
 func (bc *BtlMasterConf) GetFreshLicensePath() string {
-	return "/"+bc.ApiPath +"/"+bc.FreshLicensePath
+	return "/" + bc.ApiPath + "/" + bc.FreshLicensePath
 }
-
 
 func (bc *BtlMasterConf) GetRegisterMinerWebPath() string {
 	return "/" + bc.ApiPath + "/" + bc.RegisterMinerPath

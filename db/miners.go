@@ -15,7 +15,7 @@ import (
 type MinersDb struct {
 	db.NbsDbInter
 	dbLock sync.Mutex
-	quit chan struct{}
+	quit   chan struct{}
 }
 
 var (
@@ -28,7 +28,7 @@ func newMinersStore() *MinersDb {
 
 	db := db.NewFileDb(cfg.GetMinersDbFile()).Load()
 
-	return &MinersDb{NbsDbInter: db,quit: make(chan struct{},1)}
+	return &MinersDb{NbsDbInter: db, quit: make(chan struct{}, 1)}
 }
 
 func GetMinersDb() *MinersDb {
@@ -173,11 +173,11 @@ func (mdb *MinersDb) Next(cusor *db.DBCusor) (id account.BeatleAddress, md *Mine
 	return
 }
 
-func (mdb *MinersDb)TimeOut() {
+func (mdb *MinersDb) TimeOut() {
 	tic := time.NewTicker(time.Second * 300)
 	defer tic.Stop()
 
-	for{
+	for {
 		select {
 		case <-tic.C:
 			mdb.doTimeOUt()
@@ -188,34 +188,34 @@ func (mdb *MinersDb)TimeOut() {
 	}
 }
 
-func (mdb *MinersDb)doTimeOUt()  {
-	iter:=mdb.Iterator()
+func (mdb *MinersDb) doTimeOUt() {
+	iter := mdb.Iterator()
 
 	var dKeys []account.BeatleAddress
 
-	now:=tools.GetNowMsTime()
+	now := tools.GetNowMsTime()
 
-	for{
-		id,md,err:=mdb.Next(iter)
-		if err!=nil{
+	for {
+		id, md, err := mdb.Next(iter)
+		if err != nil {
 			break
 		}
-		if now - md.UpdateTime > 1800000{
-			dKeys = append(dKeys,id)
+		if now-md.UpdateTime > 1800000 {
+			dKeys = append(dKeys, id)
 		}
 	}
 
-	for i:=0;i<len(dKeys);i++{
+	for i := 0; i < len(dKeys); i++ {
 		mdb.Delete(dKeys[i])
 	}
 
 }
 
-func (mdb *MinersDb)Close()  {
+func (mdb *MinersDb) Close() {
 	close(mdb.quit)
 }
 
-func (mdb *MinersDb)StringAll() string  {
+func (mdb *MinersDb) StringAll() string {
 	iter := mdb.Iterator()
 
 	msg := ""

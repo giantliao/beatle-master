@@ -24,7 +24,7 @@ func CollectBootsTrapList(count int) *miners.BootsTrapMiners {
 	btms := &miners.BootsTrapMiners{}
 	cnt := 0
 
-	iter:=mdb.Iterator()
+	iter := mdb.Iterator()
 	for {
 		k, v, err := mdb.Next(iter)
 		if k == "" || err != nil {
@@ -53,7 +53,6 @@ func CollectBootsTrapList(count int) *miners.BootsTrapMiners {
 	btms.BTLCoinAddr = cfg.BTLCoinAddr
 	btms.BTLCPrice = cfg.BTLCoinPrice
 	btms.BtlcAccPoint = cfg.BTLCAccessPoint
-
 
 	for i := 0; i < len(cfg.BootsTrapDownload); i++ {
 		btms.NextDownloadPoint = append(btms.NextDownloadPoint, cfg.BootsTrapDownload[i].DownloadPoint)

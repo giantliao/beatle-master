@@ -11,10 +11,9 @@ import (
 )
 
 type FreshLicenseSrv struct {
-
 }
 
-func (fls *FreshLicenseSrv)ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (fls *FreshLicenseSrv) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	key, cipherTxt, sender, wal, err := DecodeMeta(r)
 	if err != nil {
 		w.WriteHeader(500)
@@ -22,7 +21,7 @@ func (fls *FreshLicenseSrv)ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	req:=&licenses.FreshLicenseReq{}
+	req := &licenses.FreshLicenseReq{}
 	err = req.UnMarshal(key, cipherTxt)
 	if err != nil {
 		w.WriteHeader(500)
@@ -31,27 +30,27 @@ func (fls *FreshLicenseSrv)ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if sender != req.Receiver.String(){
+	if sender != req.Receiver.String() {
 		w.WriteHeader(500)
 		fmt.Fprintf(w, "receiver not correct")
-		log.Println("receiver sender not correct",sender,req.Receiver.String())
+		log.Println("receiver sender not correct", sender, req.Receiver.String())
 		return
 	}
 
-	flr:=getLicenseFromDB(req.Receiver)
-	if flr == nil{
-		log.Println("not find license from db",req.Receiver)
+	flr := getLicenseFromDB(req.Receiver)
+	if flr == nil {
+		log.Println("not find license from db", req.Receiver)
 		w.WriteHeader(500)
 		fmt.Fprintf(w, err.Error())
 	}
 
-	log.Println("refresh license========>:",flr.License.String())
+	log.Println("refresh license========>:", flr.License.String())
 
 	cipherTxt, err = flr.Marshal(key)
 	if err != nil {
 		w.WriteHeader(500)
 		fmt.Fprintf(w, err.Error())
-		log.Println("marshal error",flr.Content.Receiver)
+		log.Println("marshal error", flr.Content.Receiver)
 		return
 	}
 
@@ -65,17 +64,17 @@ func (fls *FreshLicenseSrv)ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func getLicenseFromDB(reciver account.BeatleAddress) *licenses.FreshLicensResult  {
+func getLicenseFromDB(reciver account.BeatleAddress) *licenses.FreshLicensResult {
 
-	ld:=db.GetLicenseDb().Find(reciver)
-	if ld == nil{
+	ld := db.GetLicenseDb().Find(reciver)
+	if ld == nil {
 		return nil
 	}
 
-	l:=&licenses.FreshLicensResult{}
+	l := &licenses.FreshLicensResult{}
 	l.TxStr = ld.LastTx
 
-	c:=&l.Content
+	c := &l.Content
 	l.Signature = ld.Sig
 	c.Email = ld.Email
 	c.Name = ld.Name
@@ -85,6 +84,5 @@ func getLicenseFromDB(reciver account.BeatleAddress) *licenses.FreshLicensResult
 	c.Receiver = reciver
 
 	return l
-
 
 }

@@ -27,24 +27,24 @@ import (
 var dbsaveCmd = &cobra.Command{
 	Use:   "save",
 	Short: "save db",
-	Long: `save db`,
+	Long:  `save db`,
 	Run: func(cmd *cobra.Command, args []string) {
 
-		if len(args) != 1{
+		if len(args) != 1 {
 			fmt.Println("please set a database name")
 			return
 		}
 
-		dbname:=""
-		dbs:=config.GetDbs()
+		dbname := ""
+		dbs := config.GetDbs()
 
-		for i:=0;i<len(dbs);i++{
-			if args[0] == dbs[i]{
+		for i := 0; i < len(dbs); i++ {
+			if args[0] == dbs[i] {
 				dbname = args[0]
 			}
 		}
 
-		if dbname == ""{
+		if dbname == "" {
 			fmt.Println("no database name")
 			return
 		}
@@ -53,8 +53,6 @@ var dbsaveCmd = &cobra.Command{
 		param = append(param, dbname)
 
 		cmdclient.StringOpCmdSend("", cmdcommon.CMD_DB_SAVE, param)
-
-
 
 	},
 }

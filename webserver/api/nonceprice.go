@@ -31,14 +31,13 @@ func (nps *NoncePriceSrv) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	var npsig *licenses.NoncePriceSig
 
 	//price.GetEthPrice()
-	if np.PayTyp == licenses.PayTypETH{
+	if np.PayTyp == licenses.PayTypETH {
 		npsig = ethNoncePrice(np)
 
-	}else if np.PayTyp == licenses.PayTypBTLC{
+	} else if np.PayTyp == licenses.PayTypBTLC {
 		npsig = btlcNoncePrice(np)
 	}
 	npsig.Content.PayTyp = np.PayTyp
-
 
 	npsig.Sign(func(data []byte) []byte {
 		return wat.BtlSign(data)
@@ -60,7 +59,7 @@ func (nps *NoncePriceSrv) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, resp.ContentS)
 }
 
-func ethNoncePrice(np *licenses.NoncePrice) *licenses.NoncePriceSig{
+func ethNoncePrice(np *licenses.NoncePrice) *licenses.NoncePriceSig {
 	npsig := &licenses.NoncePriceSig{}
 	npc := &npsig.Content
 
@@ -79,7 +78,7 @@ func ethNoncePrice(np *licenses.NoncePrice) *licenses.NoncePriceSig{
 	return npsig
 }
 
-func btlcNoncePrice(np *licenses.NoncePrice) *licenses.NoncePriceSig{
+func btlcNoncePrice(np *licenses.NoncePrice) *licenses.NoncePriceSig {
 	npsig := &licenses.NoncePriceSig{}
 	npc := &npsig.Content
 
@@ -91,7 +90,6 @@ func btlcNoncePrice(np *licenses.NoncePrice) *licenses.NoncePriceSig{
 	npc.Total = npc.PricePerMonth * float64(npc.Month)
 	npc.MarketPrice = 1.0
 	npc.TotalPrice = npc.Total / npc.MarketPrice
-
 
 	return npsig
 }

@@ -69,13 +69,13 @@ var daemonCmd = &cobra.Command{
 				}
 			}
 
-			processChan.SendPasswd(daemondir,keypassword)
+			processChan.SendPasswd(daemondir, keypassword)
 			log.Println("beatles master starting, please check log at:", path.Join(daemondir, "beatlesm.log"))
 			return
 		}
 		defer cntxt.Release()
 
-		passwd:=processChan.ReceivePasswd(daemondir)
+		passwd := processChan.ReceivePasswd(daemondir)
 
 		err = wallet.LoadWallet(passwd)
 		if err != nil {

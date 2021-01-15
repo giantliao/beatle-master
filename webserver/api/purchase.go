@@ -58,9 +58,9 @@ func (pl *PurchaseLicense) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if lic,err:=findLicense(lr.TxStr,lr.TXSig.Content.Receiver);err==nil{
-		if err = reply(lic,key,w);err!=nil{
-			log.Println("reply license failed",lr.TxStr)
+	if lic, err := findLicense(lr.TxStr, lr.TXSig.Content.Receiver); err == nil {
+		if err = reply(lic, key, w); err != nil {
+			log.Println("reply license failed", lr.TxStr)
 		}
 		return
 	}
@@ -70,29 +70,29 @@ func (pl *PurchaseLicense) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	var total float64
 
-	if lr.TXSig.Content.PayTyp == licenses.PayTypETH{
-		total,err = checkEthReceipt(wal,lr)
-		if err!=nil{
+	if lr.TXSig.Content.PayTyp == licenses.PayTypETH {
+		total, err = checkEthReceipt(wal, lr)
+		if err != nil {
 			w.WriteHeader(500)
 			log.Println(lr.TxStr, err.Error())
 			fmt.Fprintf(w, err.Error())
 			return
 		}
-	}else{
+	} else {
 		var fromaddr common.Address
 		var toaddr common.Address
-		total,fromaddr,toaddr,err = coin.GetBTLCoinToken().CheckHashAndGet(common.HexToHash(lr.TxStr),2000)
-		if err != nil{
+		total, fromaddr, toaddr, err = coin.GetBTLCoinToken().CheckHashAndGet(common.HexToHash(lr.TxStr), 2000)
+		if err != nil {
 			w.WriteHeader(500)
 			log.Println(lr.TxStr, err.Error())
 			fmt.Fprintf(w, err.Error())
 			return
 		}
 
-		if fromaddr.String() != lr.TXSig.Content.Payer.String() || toaddr.String() != wal.AccountString(){
+		if fromaddr.String() != lr.TXSig.Content.Payer.String() || toaddr.String() != wal.AccountString() {
 			w.WriteHeader(500)
-			log.Println(lr.TxStr, "account not correct", fromaddr.String(),toaddr.String())
-			fmt.Fprintf(w,"account not correct")
+			log.Println(lr.TxStr, "account not correct", fromaddr.String(), toaddr.String())
+			fmt.Fprintf(w, "account not correct")
 
 			return
 		}
@@ -153,13 +153,13 @@ func (pl *PurchaseLicense) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 	pl.renewLicenseLock.Unlock()
 
-	if err = reply(l,key,w);err!=nil{
+	if err = reply(l, key, w); err != nil {
 		log.Println("receipt :", lr.TxStr, " marshal license failed")
 	}
 
 }
 
-func reply(l *licenses.License, key []byte, w http.ResponseWriter) error  {
+func reply(l *licenses.License, key []byte, w http.ResponseWriter) error {
 
 	content, err := l.Marshal(key)
 	if err != nil {
@@ -176,16 +176,16 @@ func reply(l *licenses.License, key []byte, w http.ResponseWriter) error  {
 	return nil
 }
 
-func findLicense(tx string, receiver account.BeatleAddress) (*licenses.License,error)  {
+func findLicense(tx string, receiver account.BeatleAddress) (*licenses.License, error) {
 	ld := db.GetLicenseDb().Find(receiver)
 
-	if ld == nil || tx != ld.LastTx{
-		return nil,errors.New("not found")
+	if ld == nil || tx != ld.LastTx {
+		return nil, errors.New("not found")
 	}
 
-	l:=&licenses.License{}
+	l := &licenses.License{}
 
-	c:=&l.Content
+	c := &l.Content
 
 	l.Signature = ld.Sig
 	c.Email = ld.Email
@@ -195,15 +195,13 @@ func findLicense(tx string, receiver account.BeatleAddress) (*licenses.License,e
 	c.Provider = ld.ServerId
 	c.Receiver = ld.CID
 
-	return l,nil
+	return l, nil
 }
 
-
-
-func checkEthReceipt(wal wallet.WalletIntf, lr *licenses.LicenseRenew) (float64, error)  {
+func checkEthReceipt(wal wallet.WalletIntf, lr *licenses.LicenseRenew) (float64, error) {
 	var (
 		total float64
-		err error
+		err   error
 		cnt   int
 	)
 
@@ -212,17 +210,17 @@ func checkEthReceipt(wal wallet.WalletIntf, lr *licenses.LicenseRenew) (float64,
 		if err != nil && strings.Contains(err.Error(), "pending") {
 			cnt++
 			if cnt > 2000 {
-				return 0,err
+				return 0, err
 			}
 			time.Sleep(time.Second)
 			fmt.Println("wait for confirm :", lr.TxStr)
 			continue
 		} else if err != nil {
-			return 0,err
+			return 0, err
 		} else {
 			break
 		}
 	}
 
-	return total,nil
+	return total, nil
 }

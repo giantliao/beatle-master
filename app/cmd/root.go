@@ -131,11 +131,11 @@ func cfginit(bc *config.BtlMasterConf) *config.BtlMasterConf {
 		cfg.TrxAccessPoint = remotetrxaccesspoint
 	}
 
-	if remotebtlcaccesspoint != ""{
+	if remotebtlcaccesspoint != "" {
 		cfg.BTLCAccessPoint = remotebtlcaccesspoint
 	}
 
-	if btlccontractaddr != ""{
+	if btlccontractaddr != "" {
 		cfg.BTLCoinAddr = btlccontractaddr
 	}
 

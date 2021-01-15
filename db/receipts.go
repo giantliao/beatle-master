@@ -28,16 +28,15 @@ type ReceiptItem struct {
 	UpdateTime   int64                 `json:"update_time"`
 }
 
-func (ri *ReceiptItem)String() string  {
+func (ri *ReceiptItem) String() string {
 	msg := ""
-	msg += fmt.Sprintf("ReceiptKey: %s\r\n",ri.ReceiptKey)
-	msg += fmt.Sprintf("Cid:%s, FromType:%s, FromAddress:%s\r\n",ri.Cid.String(),ri.FromType,ri.FromAddress)
+	msg += fmt.Sprintf("ReceiptKey: %s\r\n", ri.ReceiptKey)
+	msg += fmt.Sprintf("Cid:%s, FromType:%s, FromAddress:%s\r\n", ri.Cid.String(), ri.FromType, ri.FromAddress)
 	msg += fmt.Sprintf("CurrentPrice: %-8.4f, Month: %d, CreateTime: %s, UpdateTime: %s\r\n",
-		ri.CurrentPrice,ri.Month,tools.Int64Time2String(ri.CreateTime),tools.Int64Time2String(ri.UpdateTime))
+		ri.CurrentPrice, ri.Month, tools.Int64Time2String(ri.CreateTime), tools.Int64Time2String(ri.UpdateTime))
 
 	return msg
 }
-
 
 var (
 	receiptsStore     *ReceiptsDb
@@ -82,7 +81,7 @@ func (rd *ReceiptsDb) Insert(receiptKey string, cid account.BeatleAddress, fromT
 
 }
 
-func (rd *ReceiptsDb) Iterator() *db.DBCusor{
+func (rd *ReceiptsDb) Iterator() *db.DBCusor {
 	rd.dbLock.Lock()
 	defer rd.dbLock.Unlock()
 
@@ -114,9 +113,7 @@ func (rd *ReceiptsDb) Next(cursor *db.DBCusor) (receiptKey string, rdi *ReceiptI
 
 }
 
-
-
-func (rd *ReceiptsDb)StringAll() string  {
+func (rd *ReceiptsDb) StringAll() string {
 	iter := rd.Iterator()
 
 	msg := ""
@@ -139,4 +136,3 @@ func (rd *ReceiptsDb)StringAll() string  {
 
 	return msg
 }
-
