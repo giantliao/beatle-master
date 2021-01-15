@@ -45,7 +45,7 @@ func (fls *FreshLicenseSrv)ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, err.Error())
 	}
 
-	log.Println("refresh license:========>-->",flr.License.String())
+	log.Println("refresh license========>:",flr.License.String())
 
 	cipherTxt, err = flr.Marshal(key)
 	if err != nil {
@@ -82,7 +82,7 @@ func getLicenseFromDB(reciver account.BeatleAddress) *licenses.FreshLicensResult
 	c.Cell = ld.Cell
 	c.ExpireTime = ld.ExpireTime
 	c.Provider = ld.ServerId
-	c.Receiver = ld.CID
+	c.Receiver = reciver
 
 	return l
 

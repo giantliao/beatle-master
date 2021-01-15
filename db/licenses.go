@@ -139,6 +139,7 @@ func (ld *LicenseDb) Find(cid account.BeatleAddress) *LicenseDesc {
 	} else {
 		lDesc := &LicenseDesc{}
 		json.Unmarshal([]byte(lDescStr), lDesc)
+		lDesc.CID = cid
 		return lDesc
 	}
 }
