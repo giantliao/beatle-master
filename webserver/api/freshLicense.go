@@ -45,6 +45,8 @@ func (fls *FreshLicenseSrv)ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, err.Error())
 	}
 
+	log.Println("refresh license:========>-->",flr.License.String())
+
 	cipherTxt, err = flr.Marshal(key)
 	if err != nil {
 		w.WriteHeader(500)
